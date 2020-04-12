@@ -25,20 +25,24 @@ class ProductService with ChangeNotifier {
 
     Map<String, dynamic> body = json.decode(response.body);
 
-    print(body);
+    // print(body);
 
     return [...body['Data']];
   }
 
   Future<void> addProduct(
     String mainCategoryId,
+    String name,
+    String organicTypeId,
     String subCategoryId,
     String categoryTypeId,
-    String name,
+    String milkQuantity,
+    String milkUnit,
     String price,
     String unit,
-    String vetar,
+    String stock,
     File image,
+    String productId,
   ) async {
     SharedPreferences _sharedPreferences =
         await SharedPreferences.getInstance();
@@ -48,35 +52,69 @@ class ProductService with ChangeNotifier {
     } catch (Exception) {
       userDetails = null;
     }
-
-    var fileContent = image.readAsBytesSync();
-    var fileContentBase64 = base64.encode(fileContent);
-
+    print('ProductId : $productId');
+    print('userId: ${userDetails['Id']}');
+    print('MainCategory: $mainCategoryId');
+    print('Productname: $name');
     print(
-        'userId: ${userDetails['Id']}, MainCategory: $mainCategoryId, SubCategoryId: $subCategoryId, UnderSubCategoryId: $categoryTypeId, Name: $name, Price: $price, Unit: $unit, Image: ${image.uri.toString()}');
+        'OrganicType: ${(mainCategoryId == '11') ? 'organic' : organicTypeId}');
+    print('SubCategoryId: $subCategoryId');
+    print('UnderSubCategoryId: $categoryTypeId');
+    print('MilkQuantity: ${(mainCategoryId == '11') ? milkQuantity : ''}');
+    print('MilkUnit: ${(mainCategoryId == '11') ? milkUnit : ''}');
+    print('Price: $price');
+    print(' Unit: $unit');
+    print(' Image: ${(image != null) ? image.uri.toString() : ''}');
 
-    http.Response response = await http.post(
-      'https://api.farmcart.in/api/Seller/AddProduct',
-      body: {
-        'userid': userDetails['Id'],
-        'MainCetegory': mainCategoryId,
-        'MainCetegoryId': mainCategoryId,
-        'SubCetegory': subCategoryId,
-        'UnderSubCetegory': categoryTypeId,
-        'Prodcutname': name,
-        'Price': price,
-        'unit': unit,
-        'vetar': 'Test',
-        'Articleno': '1',
-        'test': fileContentBase64,
-      },
-    );
+    http.Response response = (productId == null)
+        ? await http.post(
+            'https://api.farmcart.in/api/Seller/AddProduct',
+            body: {
+              'userid': userDetails['Id'],
+              'MainCetegory': mainCategoryId,
+              'MainCetegoryId': mainCategoryId,
+              'SubCetegory': subCategoryId,
+              'UnderSubCetegory': categoryTypeId,
+              'Prodcutname': name,
+              'Organic': (mainCategoryId == '11') ? 'organic' : organicTypeId,
+              'MilkQuantity': (mainCategoryId == '11') ? milkQuantity : '',
+              'MilkUnit': (mainCategoryId == '11') ? milkUnit : '',
+              'Price': price,
+              'unit': unit,
+              'vetar': (mainCategoryId == '11') ? stock : 'Test',
+              'Articleno': (mainCategoryId == '11') ? 'Test' : stock,
+              // 'test': fileContentBase64,
+            },
+          )
+        : await http.post(
+            'https://api.farmcart.in/api/Seller/UpdateProduct',
+            body: {
+              'productid': productId,
+              'userid': userDetails['Id'],
+              'MainCetegory': mainCategoryId,
+              'MainCetegoryId': mainCategoryId,
+              'SubCetegory': subCategoryId,
+              'UnderSubCetegory': categoryTypeId,
+              'Prodcutname': name,
+              'Organic': organicTypeId,
+              'MilkQuantity': (mainCategoryId == '11') ? milkQuantity : '',
+              'MilkUnit': (mainCategoryId == '11') ? milkUnit : '',
+              'Price': price,
+              'unit': unit,
+              'vetar': (mainCategoryId == '11') ? stock : 'Test',
+              'Articleno': (mainCategoryId == '11') ? 'Test' : stock,
+              // 'test': fileContentBase64,
+            },
+          );
 
     Map<String, dynamic> body = json.decode(response.body);
 
     print('Product Added');
     print(body);
-    uploadImage(body['Productid'], userDetails['Id'], image);
+    if ((productId == null) || ((productId != null) && (image != null))) {
+      uploadImage(body['Productid'], userDetails['Id'], image);
+    }
+
     // Map<String, dynamic> body = json.decode(response.body);
 
     // print(body);
@@ -133,37 +171,37 @@ class ProductService with ChangeNotifier {
   ) async {
     // print('MainCategoryId-new : $mainCategoryId');
 
-    // mainCategoryName = (mainCategoryName == null) ? '%00' : mainCategoryName;
-    // mainCategoryId = (mainCategoryId == null) ? '%00' : mainCategoryId;
-    // subCategoryId = (subCategoryId == null) ? '%00' : subCategoryId;
-    // underSubCategoryId =
-    //     (underSubCategoryId == null) ? '%00' : underSubCategoryId;
-    // stockQuantity = (stockQuantity == null) ? '%00' : stockQuantity;
-    // stockUnit = (stockUnit == null) ? '%00' : stockUnit;
-    // minAmount = (minAmount == null) ? '%00' : minAmount;
-    // maxAmount = (maxAmount == null) ? '%00' : maxAmount;
-    // milkUnit = (milkUnit == null) ? '%00' : milkUnit;
-    // milkQuantity = (milkQuantity == null) ? '%00' : milkQuantity;
-    // organicType = (organicType == null) ? '%00' : organicType;
-    // stateId = (stateId == null) ? '%00' : stateId;
-    // districtId = (districtId == null) ? '%00' : districtId;
-    // talukaId = (talukaId == null) ? '%00' : talukaId;
-    // villageId = (villageId == null) ? '%00' : villageId;
+    mainCategoryName = (mainCategoryName == null) ? '%00' : mainCategoryName;
+    mainCategoryId = (mainCategoryId == null) ? '%00' : mainCategoryId;
+    subCategoryId = (subCategoryId == null) ? '%00' : subCategoryId;
+    underSubCategoryId =
+        (underSubCategoryId == null) ? '%00' : underSubCategoryId;
+    stockQuantity = (stockQuantity == null) ? '%00' : stockQuantity;
+    stockUnit = (stockUnit == null) ? '%00' : stockUnit;
+    minAmount = (minAmount == null) ? '%00' : minAmount;
+    maxAmount = (maxAmount == null) ? '%00' : maxAmount;
+    milkUnit = (milkUnit == null) ? '%00' : milkUnit;
+    milkQuantity = (milkQuantity == null) ? '%00' : milkQuantity;
+    organicType = (organicType == null) ? '%00' : organicType;
+    stateId = (stateId == null) ? '%00' : stateId;
+    districtId = (districtId == null) ? '%00' : districtId;
+    talukaId = (talukaId == null) ? '%00' : talukaId;
+    villageId = (villageId == null) ? '%00' : villageId;
 
-    // print('MainCategoryName: $mainCategoryName');
-    // print('MainCategoryId: $mainCategoryId');
-    // print('SubCategoryId: $subCategoryId');
-    // print('UnderSubCategoryId: $underSubCategoryId');
-    // print('StockQuantity: $stockQuantity');
-    // print('StockUnit: $stockUnit');
-    // print('MinimumAmount: $minAmount');
-    // print('MaximumAmount: $maxAmount');
-    // print('MilkUnit: $milkQuantity');
-    // print('OrganicType: $organicType');
-    // print('StateId: $stateId');
-    // print('DistrictId: $districtId');
-    // print('TalukaId: $talukaId');
-    // print('VillageId: $villageId');
+    print('MainCategoryName: $mainCategoryName');
+    print('MainCategoryId: $mainCategoryId');
+    print('SubCategoryId: $subCategoryId');
+    print('UnderSubCategoryId: $underSubCategoryId');
+    print('StockQuantity: $stockQuantity');
+    print('StockUnit: $stockUnit');
+    print('MinimumAmount: $minAmount');
+    print('MaximumAmount: $maxAmount');
+    print('MilkUnit: $milkQuantity');
+    print('OrganicType: $organicType');
+    print('StateId: $stateId');
+    print('DistrictId: $districtId');
+    print('TalukaId: $talukaId');
+    print('VillageId: $villageId');
 
     // String main_cat_name = '%E0%AA%85%E0%AA%A8%E0%AA%BE%E0%AA%9C';
     String main_cat_name = mainCategoryName;
@@ -212,9 +250,22 @@ class ProductService with ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>> getSingleProduc(String nRand) async {
+  Future<Map<String, dynamic>> getSingleProductBynRand(String nRand) async {
     http.Response response = await http.get(
       'https://api.farmcart.in/api/Pro/data?id=$nRand',
+      // 'http://api.farmcart.in/api/Pro/List?id=${userDetails['Id']}',
+    );
+
+    Map<String, dynamic> body = json.decode(response.body);
+
+    // print(body);
+
+    return [...body['Data']][0];
+  }
+
+  Future<Map<String, dynamic>> getSingleProductById(String productId) async {
+    http.Response response = await http.get(
+      'https://api.farmcart.in/api/Seller/ViewSingleProduct?id=$productId',
       // 'http://api.farmcart.in/api/Pro/List?id=${userDetails['Id']}',
     );
 

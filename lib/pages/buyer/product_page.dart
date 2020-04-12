@@ -89,11 +89,13 @@ class _ProductPageState extends State<ProductPage>
           ),
         ),
         body: FutureBuilder<Map<String, dynamic>>(
-            future: productService.getSingleProduc(widget.product['nRand']),
+            future:
+                productService.getSingleProductBynRand(widget.product['nRand']),
             builder: (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
               print(snapshot.data);
-              productId = snapshot.data['Id'];
+
               if (snapshot.hasData) {
+                productId = snapshot.data['Id'];
                 return TabBarView(
                   controller: tabController,
                   children: <Widget>[
@@ -238,223 +240,293 @@ class _ProductPageState extends State<ProductPage>
                             size: 28.0,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: RaisedButton(
-                            padding: EdgeInsets.all(16.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4.0),
-                            ),
-                            color: Theme.of(context).primaryColor,
-                            child: Text(
-                              'પૂછપરછ',
-                              style: GoogleFonts.lato(
-                                  textStyle: Theme.of(context)
-                                      .textTheme
-                                      .title
-                                      .copyWith(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      )),
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => OrderInquiryPage(
-                                      // product: widget.product,
-                                      // productData: widget.productData,
-                                      ),
-                                ),
-                              );
-                            },
-                          ),
-                        )
+                        // Padding(
+                        //   padding: const EdgeInsets.all(8.0),
+                        //   child: RaisedButton(
+                        //     padding: EdgeInsets.all(16.0),
+                        //     shape: RoundedRectangleBorder(
+                        //       borderRadius: BorderRadius.circular(4.0),
+                        //     ),
+                        //     color: Theme.of(context).primaryColor,
+                        //     child: Text(
+                        //       'પૂછપરછ',
+                        //       style: GoogleFonts.lato(
+                        //           textStyle: Theme.of(context)
+                        //               .textTheme
+                        //               .title
+                        //               .copyWith(
+                        //                 fontWeight: FontWeight.bold,
+                        //                 color: Colors.white,
+                        //               )),
+                        //     ),
+                        //     onPressed: () {
+                        //       Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //           builder: (context) => OrderInquiryPage(
+                        //               // product: widget.product,
+                        //               // productData: widget.productData,
+                        //               ),
+                        //         ),
+                        //       );
+                        //     },
+                        //   ),
+                        // )
                       ],
                     ),
-                    ListView(
-                      children: <Widget>[
-                        ListTile(
+                    // ListView(
+                    //   children: <Widget>[
+                    //     ListTile(
+                    //       title: Text(
+                    //         'નામ',
+                    //         style: GoogleFonts.lato(
+                    //           textStyle:
+                    //               Theme.of(context).textTheme.subtitle.copyWith(
+                    //                     color: Colors.black87,
+                    //                   ),
+                    //         ),
+                    //       ),
+                    //       subtitle: Text(
+                    //         widget.product['personname'],
+                    //         style: GoogleFonts.lato(
+                    //           textStyle:
+                    //               Theme.of(context).textTheme.subhead.copyWith(
+                    //                     fontWeight: FontWeight.bold,
+                    //                   ),
+                    //         ),
+                    //       ),
+                    //       leading: Icon(
+                    //         Icons.person,
+                    //         size: 28.0,
+                    //       ),
+                    //     ),
+                    //     Divider(
+                    //       indent: 64.0,
+                    //     ),
+                    //     ListTile(
+                    //       title: Text(
+                    //         'રાજ્ય',
+                    //         style: GoogleFonts.lato(
+                    //           textStyle:
+                    //               Theme.of(context).textTheme.subtitle.copyWith(
+                    //                     color: Colors.black87,
+                    //                   ),
+                    //         ),
+                    //       ),
+                    //       subtitle: Text(
+                    //         '',
+                    //         // 'ગુજરાત',
+                    //         style: GoogleFonts.lato(
+                    //           textStyle:
+                    //               Theme.of(context).textTheme.subhead.copyWith(
+                    //                     fontWeight: FontWeight.bold,
+                    //                   ),
+                    //         ),
+                    //       ),
+                    //       leading: Icon(
+                    //         Icons.device_hub,
+                    //         size: 28.0,
+                    //       ),
+                    //     ),
+                    //     Divider(
+                    //       indent: 64.0,
+                    //     ),
+                    //     ListTile(
+                    //       title: Text(
+                    //         'જિલ્લો',
+                    //         style: GoogleFonts.lato(
+                    //           textStyle:
+                    //               Theme.of(context).textTheme.subtitle.copyWith(
+                    //                     color: Colors.black87,
+                    //                   ),
+                    //         ),
+                    //       ),
+                    //       subtitle: Text(
+                    //         '',
+                    //         // 'પાટણ',
+                    //         style: GoogleFonts.lato(
+                    //           textStyle:
+                    //               Theme.of(context).textTheme.subhead.copyWith(
+                    //                     fontWeight: FontWeight.bold,
+                    //                   ),
+                    //         ),
+                    //       ),
+                    //       leading: Icon(
+                    //         Icons.map,
+                    //         size: 28.0,
+                    //       ),
+                    //     ),
+                    //     Divider(
+                    //       indent: 64.0,
+                    //     ),
+                    //     ListTile(
+                    //       title: Text(
+                    //         'તાલુકો',
+                    //         style: GoogleFonts.lato(
+                    //           textStyle:
+                    //               Theme.of(context).textTheme.subtitle.copyWith(
+                    //                     color: Colors.black87,
+                    //                   ),
+                    //         ),
+                    //       ),
+                    //       subtitle: Text(
+                    //         '',
+                    //         // 'પાટણ',
+                    //         style: GoogleFonts.lato(
+                    //           textStyle:
+                    //               Theme.of(context).textTheme.subhead.copyWith(
+                    //                     fontWeight: FontWeight.bold,
+                    //                   ),
+                    //         ),
+                    //       ),
+                    //       leading: Icon(
+                    //         Icons.location_on,
+                    //         size: 28.0,
+                    //       ),
+                    //     ),
+                    //     Divider(
+                    //       indent: 64.0,
+                    //     ),
+                    //     ListTile(
+                    //       title: Text(
+                    //         'શહેર / ગામ',
+                    //         style: GoogleFonts.lato(
+                    //           textStyle:
+                    //               Theme.of(context).textTheme.subtitle.copyWith(
+                    //                     color: Colors.black87,
+                    //                   ),
+                    //         ),
+                    //       ),
+                    //       subtitle: Text(
+                    //         '',
+                    //         // 'હાંસાપુર',
+                    //         style: GoogleFonts.lato(
+                    //           textStyle:
+                    //               Theme.of(context).textTheme.subhead.copyWith(
+                    //                     fontWeight: FontWeight.bold,
+                    //                   ),
+                    //         ),
+                    //       ),
+                    //       leading: Icon(
+                    //         Icons.location_city,
+                    //         size: 28.0,
+                    //       ),
+                    //     ),
+                    //     Divider(
+                    //       indent: 64.0,
+                    //     ),
+                    //     ListTile(
+                    //       title: Text(
+                    //         'ફોન નંબર',
+                    //         style: GoogleFonts.lato(
+                    //           textStyle:
+                    //               Theme.of(context).textTheme.subtitle.copyWith(
+                    //                     color: Colors.black87,
+                    //                   ),
+                    //         ),
+                    //       ),
+                    //       subtitle: Text(
+                    //         '',
+                    //         // '+91-${9408393331}',
+                    //         style: GoogleFonts.lato(
+                    //           textStyle:
+                    //               Theme.of(context).textTheme.subhead.copyWith(
+                    //                     fontWeight: FontWeight.bold,
+                    //                   ),
+                    //         ),
+                    //       ),
+                    //       leading: Icon(
+                    //         Icons.phone_android,
+                    //         size: 28.0,
+                    //       ),
+                    //     ),
+                    //     Padding(
+                    //       padding: const EdgeInsets.all(8.0),
+                    //       child: RaisedButton(
+                    //         padding: EdgeInsets.all(16.0),
+                    //         shape: RoundedRectangleBorder(
+                    //           borderRadius: BorderRadius.circular(4.0),
+                    //         ),
+                    //         color: Theme.of(context).primaryColor,
+                    //         child: Text(
+                    //           'પૂછપરછ',
+                    //           style: GoogleFonts.lato(
+                    //             textStyle:
+                    //                 Theme.of(context).textTheme.title.copyWith(
+                    //                       fontWeight: FontWeight.bold,
+                    //                       color: Colors.white,
+                    //                     ),
+                    //           ),
+                    //         ),
+                    //         onPressed: () {
+                    //           print('ProductPage: 458 - ${widget.product}');
+                    //           Navigator.push(
+                    //             context,
+                    //             MaterialPageRoute(
+                    //               builder: (context) => OrderInquiryPage(
+                    //                 productId: productId,
+                    //                 unitId: widget.product['unit'],
+                    //                 // product: widget.product['Data'][0],
+                    //                 // productData: widget.productData,
+                    //               ),
+                    //             ),
+                    //           );
+                    //         },
+                    //       ),
+                    //     )
+                    //   ],
+                    // ),
+                    ListView.separated(
+                      itemCount: snapshot.data['Seller'].length,
+                      itemBuilder: (context, index) {
+                        Map<String, dynamic> seller =
+                            snapshot.data['Seller'][index];
+                        return ListTile(
+                          isThreeLine: true,
                           title: Text(
-                            'નામ',
+                            seller['Name'].toString(),
                             style: GoogleFonts.lato(
                               textStyle:
-                                  Theme.of(context).textTheme.subtitle.copyWith(
-                                        color: Colors.black87,
+                                  Theme.of(context).textTheme.title.copyWith(
+                                      // color: Colors.black87,
                                       ),
                             ),
                           ),
-                          subtitle: Text(
-                            widget.product['personname'],
-                            style: GoogleFonts.lato(
-                              textStyle:
-                                  Theme.of(context).textTheme.subhead.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                            ),
-                          ),
-                          leading: Icon(
-                            Icons.person,
-                            size: 28.0,
-                          ),
-                        ),
-                        Divider(
-                          indent: 64.0,
-                        ),
-                        ListTile(
-                          title: Text(
-                            'રાજ્ય',
-                            style: GoogleFonts.lato(
-                              textStyle:
-                                  Theme.of(context).textTheme.subtitle.copyWith(
-                                        color: Colors.black87,
-                                      ),
-                            ),
-                          ),
-                          subtitle: Text(
-                            '',
-                            // 'ગુજરાત',
-                            style: GoogleFonts.lato(
-                              textStyle:
-                                  Theme.of(context).textTheme.subhead.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                            ),
-                          ),
-                          leading: Icon(
-                            Icons.device_hub,
-                            size: 28.0,
-                          ),
-                        ),
-                        Divider(
-                          indent: 64.0,
-                        ),
-                        ListTile(
-                          title: Text(
-                            'જિલ્લો',
-                            style: GoogleFonts.lato(
-                              textStyle:
-                                  Theme.of(context).textTheme.subtitle.copyWith(
-                                        color: Colors.black87,
-                                      ),
-                            ),
-                          ),
-                          subtitle: Text(
-                            '',
-                            // 'પાટણ',
-                            style: GoogleFonts.lato(
-                              textStyle:
-                                  Theme.of(context).textTheme.subhead.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                            ),
-                          ),
-                          leading: Icon(
-                            Icons.map,
-                            size: 28.0,
-                          ),
-                        ),
-                        Divider(
-                          indent: 64.0,
-                        ),
-                        ListTile(
-                          title: Text(
-                            'તાલુકો',
-                            style: GoogleFonts.lato(
-                              textStyle:
-                                  Theme.of(context).textTheme.subtitle.copyWith(
-                                        color: Colors.black87,
-                                      ),
-                            ),
-                          ),
-                          subtitle: Text(
-                            '',
-                            // 'પાટણ',
-                            style: GoogleFonts.lato(
-                              textStyle:
-                                  Theme.of(context).textTheme.subhead.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                            ),
-                          ),
-                          leading: Icon(
-                            Icons.location_on,
-                            size: 28.0,
-                          ),
-                        ),
-                        Divider(
-                          indent: 64.0,
-                        ),
-                        ListTile(
-                          title: Text(
-                            'શહેર / ગામ',
-                            style: GoogleFonts.lato(
-                              textStyle:
-                                  Theme.of(context).textTheme.subtitle.copyWith(
-                                        color: Colors.black87,
-                                      ),
-                            ),
-                          ),
-                          subtitle: Text(
-                            '',
-                            // 'હાંસાપુર',
-                            style: GoogleFonts.lato(
-                              textStyle:
-                                  Theme.of(context).textTheme.subhead.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                            ),
-                          ),
-                          leading: Icon(
-                            Icons.location_city,
-                            size: 28.0,
-                          ),
-                        ),
-                        Divider(
-                          indent: 64.0,
-                        ),
-                        ListTile(
-                          title: Text(
-                            'ફોન નંબર',
-                            style: GoogleFonts.lato(
-                              textStyle:
-                                  Theme.of(context).textTheme.subtitle.copyWith(
-                                        color: Colors.black87,
-                                      ),
-                            ),
-                          ),
-                          subtitle: Text(
-                            '',
-                            // '+91-${9408393331}',
-                            style: GoogleFonts.lato(
-                              textStyle:
-                                  Theme.of(context).textTheme.subhead.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                            ),
-                          ),
-                          leading: Icon(
-                            Icons.phone_android,
-                            size: 28.0,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: RaisedButton(
-                            padding: EdgeInsets.all(16.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4.0),
-                            ),
-                            color: Theme.of(context).primaryColor,
-                            child: Text(
-                              'પૂછપરછ',
-                              style: GoogleFonts.lato(
-                                textStyle:
-                                    Theme.of(context).textTheme.title.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                        ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                '${seller['Village']}, ${seller['City']}, ${seller['Dist']}, ${seller['State']}',
+                                style: GoogleFonts.lato(
+                                  textStyle: Theme.of(context)
+                                      .textTheme
+                                      .subtitle
+                                      .copyWith(
+                                          // color: Colors.black87,
+                                          ),
+                                ),
                               ),
+                              SizedBox(
+                                height: 2.0,
+                              ),
+                              Text(
+                                'Phone - ${seller['Mobile']}',
+                                style: GoogleFonts.lato(
+                                  textStyle: Theme.of(context)
+                                      .textTheme
+                                      .subtitle
+                                      .copyWith(
+                                          // color: Colors.black87,
+                                          ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          trailing: FloatingActionButton(
+                            elevation: 2.0,
+                            child: Icon(
+                              Icons.email,
+                              color: Colors.white,
                             ),
                             onPressed: () {
                               print('ProductPage: 458 - ${widget.product}');
@@ -464,6 +536,7 @@ class _ProductPageState extends State<ProductPage>
                                   builder: (context) => OrderInquiryPage(
                                     productId: productId,
                                     unitId: widget.product['unit'],
+                                    sellerId: seller['Id'],
                                     // product: widget.product['Data'][0],
                                     // productData: widget.productData,
                                   ),
@@ -471,8 +544,11 @@ class _ProductPageState extends State<ProductPage>
                               );
                             },
                           ),
-                        )
-                      ],
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return Divider();
+                      },
                     ),
                   ],
                 );

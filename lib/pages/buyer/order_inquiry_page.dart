@@ -10,9 +10,10 @@ import 'package:provider/provider.dart';
 class OrderInquiryPage extends StatefulWidget {
   final String productId;
   final String unitId;
+  final String sellerId;
   // final List<Map<String, dynamic>> productData;
 
-  const OrderInquiryPage({Key key, this.productId, this.unitId})
+  const OrderInquiryPage({Key key, this.productId, this.unitId, this.sellerId})
       : super(key: key);
 
   @override
@@ -68,21 +69,20 @@ class _OrderInquiryPageState extends State<OrderInquiryPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'Order Inquiry',
+            'ઓર્ડર પૂછપરછ',
             style: GoogleFonts.lato(
               textStyle: Theme.of(context).textTheme.title.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Theme.of(context).primaryColor,
                   ),
             ),
           ),
           titleSpacing: 0.0,
           elevation: 1.0,
-          // backgroundColor: Colors.white,
+          backgroundColor: Colors.white,
           iconTheme: IconThemeData(
-            // color: Theme.of(context).primaryColor,
-            color: Colors.white,
-          ),
+              // color: Colors.black,
+              ),
         ),
         body: Form(
           key: formKey,
@@ -425,17 +425,19 @@ class _OrderInquiryPageState extends State<OrderInquiryPage> {
                 formKey.currentState.save();
 
                 orderService.submitOrderInquiry(
-                    name,
-                    address,
-                    stateId,
-                    districtId,
-                    villageId,
-                    pincode,
-                    contactNo,
-                    selectedUnit,
-                    quantity,
-                    message,
-                    widget.productId);
+                  name,
+                  address,
+                  stateId,
+                  districtId,
+                  villageId,
+                  pincode,
+                  contactNo,
+                  selectedUnit,
+                  quantity,
+                  message,
+                  widget.productId,
+                  widget.sellerId,
+                );
 
                 // formKey.currentState.reset();
               }

@@ -33,9 +33,11 @@ class _SignupPageState extends State<SignupPage> {
   String contactNo;
   String productId;
   bool districtEnabled = false;
+  bool talukaEnabled = false;
   bool cityEnabled = false;
   String stateId;
   String districtId;
+  String talukaId;
   String villageCityId;
   String pincode;
   String gender;
@@ -166,6 +168,7 @@ class _SignupPageState extends State<SignupPage> {
                     filled: true,
                     labelText: 'ફોન નંબર',
                   ),
+                  maxLength: 10,
                   controller: _phoneController,
                   onSaved: (value) {},
                   validator: (value) {
@@ -211,8 +214,15 @@ class _SignupPageState extends State<SignupPage> {
                   controller: _emailController,
                   onSaved: (value) {},
                   validator: (value) {
+                    bool emailValid = RegExp(
+                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                        .hasMatch(value);
+
                     if (value.isEmpty) {
                       return 'ઈ-મેલ એડ્રેસ ખાલી ના હોવું જોઈએ.';
+                    }
+                    if (!emailValid) {
+                      return 'આ ઈમેલ એડ્રેસ માન્ય નથી.';
                     }
                     return null;
                   },
@@ -221,183 +231,194 @@ class _SignupPageState extends State<SignupPage> {
               SizedBox(
                 height: 8.0,
               ),
-              Container(
-                child: FutureBuilder<List<Map<String, dynamic>>>(
-                  future: locationService.getStates(),
-                  initialData: [
-                    {'Id': '2', 'Name': 'Gujarat'}
-                  ],
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
-                    if (snapshot.hasData) {
-                      return DropDownFormField(
-                        titleText: 'રાજ્ય',
-                        hintText: 'રાજ્ય',
-                        value: stateId,
-                        required: true,
-                        onSaved: (value) {
-                          setState(() {
-                            stateId = value;
-                          });
-                        },
-                        onChanged: (value) {
-                          setState(() {
-                            stateId = value;
-                            districtId = null;
-                            villageCityId = null;
-                            districtEnabled = true;
-                          });
-                        },
-                        dataSource: snapshot.data,
-                        textField: 'Name',
-                        valueField: 'Id',
-                      );
-                    } else {
-                      return Center(
-                        child: Container(
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-                    }
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 8.0,
-              ),
-              Container(
-                child: FutureBuilder<List<Map<String, dynamic>>>(
-                  future: locationService.getDistricts(stateId),
-                  initialData: [
-                    {"Stateid": "2", "Id": "4", "Name": "Ahmedabad"}
-                  ],
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
-                    if (snapshot.hasData) {
-                      return DropDownFormField(
-                        titleText: 'જિલ્લો',
-                        hintText: 'જિલ્લો',
-                        value: districtId,
-                        required: true,
-                        onSaved: (value) {
-                          setState(() {
-                            districtId = value;
-                          });
-                        },
-                        onChanged: (value) {
-                          setState(() {
-                            districtId = value;
-                            villageCityId = null;
-                            cityEnabled = true;
-                          });
-                        },
-                        dataSource: districtEnabled ? snapshot.data : [],
-                        textField: 'Name',
-                        valueField: 'Id',
-                      );
-                    } else {
-                      return Center(
-                        child: Container(
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-                    }
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 8.0,
-              ),
-              Container(
-                child: FutureBuilder<List<Map<String, dynamic>>>(
-                  future: locationService.getDistricts(stateId),
-                  initialData: [
-                    {"Stateid": "2", "Id": "4", "Name": "Ahmedabad"}
-                  ],
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
-                    if (snapshot.hasData) {
-                      return DropDownFormField(
-                        titleText: 'તાલુકો',
-                        hintText: 'તાલુકો',
-                        value: districtId,
-                        required: true,
-                        onSaved: (value) {
-                          setState(() {
-                            districtId = value;
-                          });
-                        },
-                        onChanged: (value) {
-                          setState(() {
-                            districtId = value;
-                            villageCityId = null;
-                            cityEnabled = true;
-                          });
-                        },
-                        dataSource: districtEnabled ? snapshot.data : [],
-                        textField: 'Name',
-                        valueField: 'Id',
-                      );
-                    } else {
-                      return Center(
-                        child: Container(
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-                    }
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 8.0,
-              ),
-              Container(
-                child: FutureBuilder<List<Map<String, dynamic>>>(
-                  future: locationService.getCities(stateId, districtId),
-                  initialData: [
-                    {
-                      "Stateid": "2",
-                      "distinctid": "4",
-                      "Id": "1540",
-                      "Name": "Abasana"
-                    }
-                  ],
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
-                    if (snapshot.hasData) {
-                      return DropDownFormField(
-                        titleText: 'શહેર / ગામ',
-                        hintText: 'શહેર / ગામ',
-                        value: villageCityId,
-                        required: true,
-                        onSaved: (value) {
-                          setState(() {
-                            villageCityId = value;
-                          });
-                        },
-                        onChanged: (value) async {
-                          setState(() {
-                            villageCityId = value;
-                          });
+              // Container(
+              //   child: FutureBuilder<List<Map<String, dynamic>>>(
+              //     future: locationService.getStates(),
+              //     initialData: [
+              //     ],
+              //     builder: (BuildContext context,
+              //         AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+              //       if (snapshot.hasData) {
+              //         return DropDownFormField(
+              //           titleText: 'રાજ્ય',
+              //           hintText: 'રાજ્ય',
+              //           value: stateId,
+              //           required: true,
+              //           onSaved: (value) {
+              //             setState(() {
+              //               stateId = value;
+              //             });
+              //           },
+              //           onChanged: (value) {
+              //             setState(() {
+              //               stateId = value;
+              //               districtId = null;
+              //               talukaId = null;
+              //               villageCityId = null;
+              //               districtEnabled = true;
+              //               talukaEnabled = false;
+              //               cityEnabled = false;
+              //             });
+              //           },
+              //           dataSource: snapshot.data,
+              //           textField: 'Name',
+              //           valueField: 'Id',
+              //         );
+              //       } else {
+              //         return Center(
+              //           child: Container(
+              //             child: CircularProgressIndicator(),
+              //           ),
+              //         );
+              //       }
+              //     },
+              //   ),
+              // ),
+              // SizedBox(
+              //   height: 8.0,
+              // ),
+              // Container(
+              //   child: FutureBuilder<List<Map<String, dynamic>>>(
+              //     future: locationService.getDistricts(stateId),
+              //     initialData: [],
+              //     builder: (BuildContext context,
+              //         AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+              //       if (snapshot.hasData) {
+              //         return DropDownFormField(
+              //           titleText: 'જિલ્લો',
+              //           hintText: 'જિલ્લો',
+              //           value: districtId,
+              //           required: true,
+              //           onSaved: (value) {
+              //             setState(() {
+              //               districtId = value;
+              //             });
+              //           },
+              //           onChanged: (value) {
+              //             setState(() {
+              //               districtId = value;
+              //               talukaId = null;
+              //               villageCityId = null;
+              //               talukaEnabled = true;
+              //               cityEnabled = false;
+              //             });
+              //           },
+              //           dataSource: districtEnabled ? snapshot.data : [],
+              //           textField: 'Name',
+              //           valueField: 'Id',
+              //         );
+              //       } else {
+              //         return Center(
+              //           child: Container(
+              //             child: CircularProgressIndicator(),
+              //           ),
+              //         );
+              //       }
+              //     },
+              //   ),
+              // ),
+              // SizedBox(
+              //   height: 8.0,
+              // ),
+              // Container(
+              //   child: FutureBuilder<List<Map<String, dynamic>>>(
+              //     future: locationService.getTehsils(districtId),
+              //     initialData: [],
+              //     builder: (BuildContext context,
+              //         AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+              //       if (snapshot.hasData) {
+              //         return DropDownFormField(
+              //           titleText: 'તાલુકો',
+              //           hintText: 'તાલુકો',
+              //           value: talukaId,
+              //           required: true,
+              //           onSaved: (value) {
+              //             setState(() {
+              //               talukaId = value;
+              //             });
+              //           },
+              //           onChanged: (value) {
+              //             setState(() {
+              //               talukaId = value;
+              //               villageCityId = null;
+              //               cityEnabled = true;
+              //             });
+              //           },
+              //           dataSource: talukaEnabled ? snapshot.data : [],
+              //           textField: 'Name',
+              //           valueField: 'Id',
+              //         );
+              //       } else {
+              //         return Center(
+              //           child: Container(
+              //             child: CircularProgressIndicator(),
+              //           ),
+              //         );
+              //       }
+              //     },
+              //   ),
+              // ),
+              // SizedBox(
+              //   height: 8.0,
+              // ),
+              // Container(
+              //   child: FutureBuilder<List<Map<String, dynamic>>>(
+              //     future: locationService.getCities(talukaId, districtId),
+              //     initialData: [],
+              //     builder: (BuildContext context,
+              //         AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+              //       if (snapshot.hasData) {
+              //         return DropDownFormField(
+              //           titleText: 'શહેર / ગામ',
+              //           hintText: 'શહેર / ગામ',
+              //           value: villageCityId,
+              //           required: true,
+              //           onSaved: (value) {
+              //             setState(() {
+              //               villageCityId = value;
+              //             });
+              //           },
+              //           onChanged: (value) async {
+              //             setState(() {
+              //               villageCityId = value;
+              //             });
 
-                          List<Map<String, dynamic>> pincodeData =
-                              await locationService.getPincode(value);
-                          _pincodeController.text = pincodeData[0]['Name'];
-                        },
-                        dataSource: cityEnabled ? snapshot.data : [],
-                        textField: 'Name',
-                        valueField: 'Id',
-                      );
-                    } else {
-                      return Center(
-                        child: Container(
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-                    }
-                  },
-                ),
+              //             // List<Map<String, dynamic>> pincodeData =
+              //             //     await locationService.getPincode(value);
+              //             // _pincodeController.text = pincodeData[0]['Name'];
+              //           },
+              //           dataSource: cityEnabled ? snapshot.data : [],
+              //           textField: 'Name',
+              //           valueField: 'Id',
+              //         );
+              //       } else {
+              //         return Center(
+              //           child: Container(
+              //             child: CircularProgressIndicator(),
+              //           ),
+              //         );
+              //       }
+              //     },
+              //   ),
+              // ),
+
+              SizedBox(
+                height: 8.0,
               ),
+              stateDropdownWidget(context, locationService),
+              SizedBox(
+                height: 8.0,
+              ),
+              districtDropdownWidget(context, locationService),
+              SizedBox(
+                height: 8.0,
+              ),
+              tehsilDropdownWidget(context, locationService),
+              SizedBox(
+                height: 8.0,
+              ),
+              villageCityDropdownWidget(context, locationService),
+
               SizedBox(
                 height: 8.0,
               ),
@@ -538,55 +559,100 @@ class _SignupPageState extends State<SignupPage> {
                       String address = _addressController.text;
                       String alternateNo = _alternatephoneController.text;
                       String birthdate = _birthdateController.text;
-                      _nameController.text = '';
-                      _emailController.text = '';
-                      _passwordController.text = '';
-                      _phoneController.text = '';
-                      _alternatephoneController.text = '';
-                      _pincodeController.text = '';
-                      _addressController.text = '';
-                      _birthdateController.text = '';
-                      _usernameController.text = '';
-                      _passwordController.text = '';
-                      _formKey.currentState.reset();
+
+                      bool registeredMobile =
+                          await _authService.checkMobile(mobile);
+                      if (registeredMobile) {
+                        showDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text('WARNING'),
+                                content: Text(
+                                    '$mobile is already registered. login using that account.'),
+                              );
+                            });
+                      }
+
+                      bool registeredUsername =
+                          await _authService.checkUsername(username);
+                      if (registeredUsername) {
+                        showDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text('WARNING'),
+                                content: Text(
+                                    '$username is already registered. login using that account.'),
+                              );
+                            });
+                      }
+
                       print(
                           'Name: $name, Address: $address, Country: India, StateId: $stateId, DistrictId: $districtId, CityId: $villageCityId, Pincode: $pincode, Email: $email, MobileNo: $mobile, AlternateMobileNo: $alternateNo, Gender: $gender, Birthdate: $birthdate, Username: $username, Password: $password');
 
-                      bool _loggedIn = await _authService.signUp(
-                        name,
-                        address,
-                        'India',
-                        stateId,
-                        districtId,
-                        villageCityId,
-                        pincode,
-                        email,
-                        mobile,
-                        alternateNo,
-                        gender,
-                        birthdate,
-                        username,
-                        password,
-                      );
-                      if (_loggedIn) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AuthPage(
-                                // isSeller: true,
-                                ),
-                          ),
+                      if (!registeredMobile || !registeredUsername) {
+                        _nameController.text = '';
+                        _emailController.text = '';
+                        _passwordController.text = '';
+                        _phoneController.text = '';
+                        _alternatephoneController.text = '';
+                        _pincodeController.text = '';
+                        _addressController.text = '';
+                        _birthdateController.text = '';
+                        _usernameController.text = '';
+                        _passwordController.text = '';
+                        _formKey.currentState.reset();
+
+                        bool _loggedIn = await _authService.signUp(
+                          name,
+                          address,
+                          'India',
+                          stateId,
+                          districtId,
+                          talukaId,
+                          villageCityId,
+                          pincode,
+                          email,
+                          mobile,
+                          alternateNo,
+                          gender,
+                          birthdate,
+                          username,
+                          password,
                         );
-                      } else {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: Text('ERROR'),
-                                content: Text(
-                                    'An error occured while signin up. Try again.'),
-                              );
-                            });
+                        if (_loggedIn) {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text('SUCCESS'),
+                                  content: Text(
+                                      'Your account is created succesfullu.'),
+                                );
+                              });
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AuthPage(
+                                  // isSeller: true,
+                                  ),
+                            ),
+                          );
+                        } else {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text('ERROR'),
+                                  content: Text(
+                                      'An error occured while signin up. Try again.'),
+                                );
+                              });
+                        }
                       }
                     }
                     setState(() {
@@ -598,6 +664,143 @@ class _SignupPageState extends State<SignupPage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget stateDropdownWidget(
+      BuildContext context, LocationService locationService) {
+    return Container(
+      child: FutureBuilder<List<Map<String, dynamic>>>(
+        future: locationService.getStates(),
+        builder: (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+          return DropDownFormField(
+            titleText: 'રાજ્ય',
+            hintText: 'રાજ્ય',
+            value: stateId,
+            required: true,
+            onSaved: (value) {
+              setState(() {
+                stateId = value;
+                districtId = null;
+                talukaId = null;
+                villageCityId = null;
+              });
+            },
+            onChanged: (value) {
+              setState(() {
+                stateId = value;
+                districtId = null;
+                talukaId = null;
+                villageCityId = null;
+                districtEnabled = true;
+                talukaEnabled = false;
+                cityEnabled = false;
+              });
+            },
+            dataSource: (snapshot.data != null) ? snapshot.data : [],
+            textField: 'Name',
+            valueField: 'Id',
+          );
+        },
+      ),
+    );
+  }
+
+  Widget districtDropdownWidget(
+      BuildContext context, LocationService locationService) {
+    return Container(
+      child: FutureBuilder<List<Map<String, dynamic>>>(
+        future: locationService.getDistricts(stateId),
+        builder: (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+          return DropDownFormField(
+            titleText: 'જિલ્લો',
+            hintText: 'જિલ્લો',
+            value: districtId,
+            required: true,
+            onSaved: (value) {
+              setState(() {
+                districtId = value;
+                talukaId = null;
+                villageCityId = null;
+              });
+            },
+            onChanged: (value) {
+              setState(() {
+                districtId = value;
+                talukaId = null;
+                villageCityId = null;
+                talukaEnabled = true;
+                cityEnabled = false;
+              });
+            },
+            dataSource: (districtEnabled) ? snapshot.data : [],
+            textField: 'Name',
+            valueField: 'Id',
+          );
+        },
+      ),
+    );
+  }
+
+  Widget tehsilDropdownWidget(
+      BuildContext context, LocationService locationService) {
+    return Container(
+      child: FutureBuilder<List<Map<String, dynamic>>>(
+        future: locationService.getTehsils(districtId),
+        builder: (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+          return DropDownFormField(
+            titleText: 'તાલુકો',
+            hintText: 'તાલુકો',
+            value: talukaId,
+            required: true,
+            onSaved: (value) {
+              setState(() {
+                talukaId = value;
+              });
+            },
+            onChanged: (value) {
+              setState(() {
+                talukaId = value;
+                villageCityId = null;
+                cityEnabled = true;
+              });
+            },
+            dataSource: (talukaEnabled) ? snapshot.data : [],
+            textField: 'Name',
+            valueField: 'Id',
+          );
+        },
+      ),
+    );
+  }
+
+  Widget villageCityDropdownWidget(
+      BuildContext context, LocationService locationService) {
+    return Container(
+      child: FutureBuilder(
+        future: locationService.getCities(talukaId, districtId),
+        builder: (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+          return DropDownFormField(
+            titleText: 'શહેર/ગામ',
+            hintText: 'શહેર/ગામ',
+            value: villageCityId,
+            required: true,
+            onSaved: (value) {
+              setState(() {
+                villageCityId = value;
+              });
+            },
+            onChanged: (value) {
+              setState(() {
+                villageCityId = value;
+              });
+            },
+            dataSource: (cityEnabled) ? snapshot.data : [],
+            textField: 'Name',
+            valueField: 'Id',
+          );
+        },
       ),
     );
   }

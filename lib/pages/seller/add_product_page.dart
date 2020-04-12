@@ -10,11 +10,19 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class AddProductPage extends StatefulWidget {
+  final String productId;
+  final Map<String, dynamic> product;
+
+  const AddProductPage({Key key, this.productId, this.product})
+      : super(key: key);
+
   @override
   _AddProductPageState createState() => _AddProductPageState();
 }
 
 class _AddProductPageState extends State<AddProductPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   final TextEditingController milkQuantityController = TextEditingController();
   final TextEditingController stockQuantityController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
@@ -40,13 +48,40 @@ class _AddProductPageState extends State<AddProductPage> {
   String districtId;
   String tehsilId;
   String villageId;
+
+  List<Map<String, dynamic>> mainCategories = [];
+  List<Map<String, dynamic>> subCategories = [];
+  List<Map<String, dynamic>> categoryTypes = [];
+  bool _loading = false;
   bool subCategoryEnabled = false;
   bool categoryTypeEnabled = false;
-  bool organicTypeEnabled = false;
+  bool organicTypeEnabled = true;
   bool gabhanEnabled = false;
   bool districtEnabled = false;
   bool tehsilEnabled = false;
   bool villageEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    print(widget.product);
+    if (widget.product != null) {
+      mainCategoryId = widget.product['MainCategory'];
+      subCategoryId = widget.product['SubCategory'];
+      subCategoryEnabled = true;
+      categoryTypeId = widget.product['InSubCategory'];
+      categoryTypeEnabled = true;
+      priceController.text = widget.product['Price'];
+      stockUnitId = widget.product['unit'];
+      stockQuantityController.text = widget.product['articleno'];
+
+      print('MainCategoryId : $mainCategoryId');
+      print('SubCategoryId : $subCategoryId');
+      print('CategoryTypeId : $categoryTypeId');
+      print('Price : ${priceController.text}');
+      print('StockUnit : $stockUnitId');
+    }
+  }
 
   Future getImage() async {
     var image = await ImagePicker.pickImage(
@@ -71,46 +106,53 @@ class _AddProductPageState extends State<AddProductPage> {
             'ખરીદ',
             style: GoogleFonts.lato(
               textStyle: Theme.of(context).textTheme.title.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor,
                   ),
             ),
           ),
+          titleSpacing: 0.0,
+          elevation: 1.0,
+          backgroundColor: Colors.white,
+          iconTheme: IconThemeData(
+              // color: Colors.black,
+              ),
         ),
-        body: ListView(
-          padding: EdgeInsets.all(16.0),
-          children: <Widget>[
-            mainCategoryDropdownWidget(context, _categoryService),
-            SizedBox(
-              height: 8.0,
-            ),
-            subCategoryDropdownWidget(context, _categoryService),
-            SizedBox(
-              height: 8.0,
-            ),
-            categoryTypeDropdownWidget(context, _categoryService),
-            SizedBox(
-              height: 8.0,
-            ),
-            organicTypeDropdownWidget(context, _categoryService),
-            SizedBox(
-              height: 8.0,
-            ),
-            nameTextFieldWidget(),
-            gabhanTypeDropdownWidget(context, _categoryService),
-            SizedBox(
-              height: 8.0,
-            ),
-            priceAndUnitRowWidget(context, _categoryService),
-            SizedBox(
-              height: 8.0,
-            ),
-            selectImageWidget(),
-            SizedBox(
-              height: 8.0,
-            ),
-            submitButtonWidget(context, _productService),
-          ],
+        body: Form(
+          key: _formKey,
+          child: ListView(
+            padding: EdgeInsets.all(16.0),
+            children: <Widget>[
+              mainCategoryDropdownWidget(context, _categoryService),
+              SizedBox(
+                height: 8.0,
+              ),
+              subCategoryDropdownWidget(context, _categoryService),
+              SizedBox(
+                height: 8.0,
+              ),
+              categoryTypeDropdownWidget(context, _categoryService),
+              SizedBox(
+                height: 8.0,
+              ),
+              (mainCategoryId == '11')
+                  ? gabhanTypeWidget()
+                  : organicTypeDropdownWidget(),
+              SizedBox(
+                height: 8.0,
+              ),
+              milkQuantityandUnitWidget(context, _categoryService),
+              priceAndUnitRowWidget(context, _categoryService),
+              SizedBox(
+                height: 8.0,
+              ),
+              selectImageWidget(),
+              SizedBox(
+                height: 8.0,
+              ),
+              submitButtonWidget(context, _productService),
+            ],
+          ),
         ),
       ),
     );
@@ -125,6 +167,7 @@ class _AddProductPageState extends State<AddProductPage> {
         builder: (BuildContext context,
             AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
           if (snapshot.hasData) {
+            mainCategories = snapshot.data;
             return DropDownFormField(
               titleText: 'મેઈન કેટેગરી',
               hintText: 'મેઈન કેટેગરી',
@@ -144,11 +187,13 @@ class _AddProductPageState extends State<AddProductPage> {
                   stockUnitId = null;
                   subCategoryEnabled = true;
                   categoryTypeEnabled = false;
-                  organicTypeEnabled = false;
+
                   if (value == '11') {
                     gabhanEnabled = true;
+                    organicTypeEnabled = false;
                   } else {
                     gabhanEnabled = false;
+                    organicTypeEnabled = true;
                   }
                 });
               },
@@ -177,6 +222,7 @@ class _AddProductPageState extends State<AddProductPage> {
         builder: (BuildContext context,
             AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
           if (snapshot.hasData) {
+            subCategories = snapshot.data;
             return DropDownFormField(
               titleText: 'પ્રકાર',
               hintText: 'પ્રકાર',
@@ -221,6 +267,7 @@ class _AddProductPageState extends State<AddProductPage> {
         builder: (BuildContext context,
             AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
           if (snapshot.hasData) {
+            categoryTypes = snapshot.data;
             return DropDownFormField(
               titleText: 'પેટા પ્રકાર',
               hintText: 'પેટા પ્રકાર',
@@ -254,95 +301,76 @@ class _AddProductPageState extends State<AddProductPage> {
     );
   }
 
-  Widget organicTypeDropdownWidget(
-      BuildContext context, CategoryService categoryService) {
+  Widget organicTypeDropdownWidget() {
+    return Column(
+      children: <Widget>[
+        Container(
+          child: DropDownFormField(
+            titleText: 'ઓર્ગેનીક પ્રકાર',
+            hintText: 'ઓર્ગેનીક પ્રકાર',
+            value: organicTypeId,
+            required: true,
+            onSaved: (value) {
+              setState(() {
+                organicTypeId = value;
+              });
+            },
+            onChanged: (value) {
+              setState(() {
+                organicTypeId = value;
+              });
+            },
+            dataSource: (organicTypeEnabled)
+                ? [
+                    {'Id': 'organic', 'Name': 'ઓર્ગેનીક'},
+                    {'Id': 'nonorganic', 'Name': 'બિન-ઓર્ગેનીક'},
+                  ]
+                : [],
+            textField: 'Name',
+            valueField: 'Id',
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget gabhanTypeWidget() {
     return Container(
+      width: 150.0,
       child: DropDownFormField(
-        titleText: 'ઓર્ગેનીક પ્રકાર',
-        hintText: 'ઓર્ગેનીક પ્રકાર',
-        value: organicTypeId,
+        titleText: 'ગાભણ ના પ્રકાર',
+        hintText: 'ગાભણ ના પ્રકાર',
+        value: gabhanId,
         required: true,
         onSaved: (value) {
           setState(() {
-            organicTypeId = value;
+            gabhanId = value;
           });
         },
         onChanged: (value) {
           setState(() {
-            organicTypeId = value;
+            gabhanId = value;
           });
-          if (organicTypeId == 'Organic') {
-            gabhanEnabled = true;
-          } else {
-            gabhanEnabled = false;
-          }
         },
-        dataSource: (organicTypeEnabled)
-            ? [
-                {'Id': 'ઓર્ગેનીક', 'Name': 'ઓર્ગેનીક'},
-                {'Id': 'બિન-ઓર્ગેનીક', 'Name': 'બિન-ઓર્ગેનીક'},
-              ]
-            : [],
+        dataSource: [
+          {'Id': 'gabhan', 'Name': 'ગાભણ'},
+          {'Id': 'nongabhan', 'Name': 'બિન-ગાભણ'},
+        ],
         textField: 'Name',
         valueField: 'Id',
       ),
     );
   }
 
-  Widget nameTextFieldWidget() {
-    return Container(
-      child: TextFormField(
-        controller: nameController,
-        decoration: InputDecoration(
-          filled: true,
-          labelText: 'નામ',
-          contentPadding:
-              EdgeInsets.symmetric(vertical: 20.0, horizontal: 12.0),
-        ),
-      ),
-    );
-  }
-
-  Widget gabhanTypeDropdownWidget(
+  Widget milkQuantityandUnitWidget(
       BuildContext context, CategoryService categoryService) {
-    return (gabhanEnabled)
+    return (mainCategoryId == '11')
         ? Container(
             child: Column(
               children: <Widget>[
-                SizedBox(
-                  height: 8.0,
-                ),
                 Container(
                   child: Row(
                     children: <Widget>[
-                      Container(
-                        width: 150.0,
-                        child: DropDownFormField(
-                          titleText: 'ગાભણ ના પ્રકાર',
-                          hintText: 'ગાભણ ના પ્રકાર',
-                          value: gabhanId,
-                          required: true,
-                          onSaved: (value) {
-                            setState(() {
-                              gabhanId = value;
-                            });
-                          },
-                          onChanged: (value) {
-                            setState(() {
-                              gabhanId = value;
-                            });
-                          },
-                          dataSource: [
-                            {'Id': 'ગાભણ', 'Name': 'ગાભણ'},
-                            {'Id': 'બિન-ગાભણ', 'Name': 'બિન-ગાભણ'},
-                          ],
-                          textField: 'Name',
-                          valueField: 'Id',
-                        ),
-                      ),
-                      SizedBox(
-                        width: 8.0,
-                      ),
                       Flexible(
                         flex: 1,
                         child: TextFormField(
@@ -359,7 +387,7 @@ class _AddProductPageState extends State<AddProductPage> {
                         width: 8.0,
                       ),
                       Container(
-                        width: 120.0,
+                        width: 150.0,
                         child: DropDownFormField(
                           titleText: 'માપ',
                           hintText: 'માપ',
@@ -376,8 +404,8 @@ class _AddProductPageState extends State<AddProductPage> {
                             });
                           },
                           dataSource: [
-                            {'Id': 'કિલો', 'Name': 'કિલો'},
-                            {'Id': 'લીટર', 'Name': 'લીટર'},
+                            {'Id': 'Kg', 'Name': 'કિલો'},
+                            {'Id': 'Litre', 'Name': 'લીટર'},
                           ],
                           textField: 'Name',
                           valueField: 'Id',
@@ -385,6 +413,9 @@ class _AddProductPageState extends State<AddProductPage> {
                       ),
                     ],
                   ),
+                ),
+                SizedBox(
+                  height: 8.0,
                 ),
               ],
             ),
@@ -398,6 +429,28 @@ class _AddProductPageState extends State<AddProductPage> {
       width: MediaQuery.of(context).size.width - 40,
       child: Row(
         children: <Widget>[
+          Flexible(
+            flex: 1,
+            child: TextFormField(
+              controller: stockQuantityController,
+              validator: (value) {
+                if (value.isEmpty) {
+                  return '';
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                filled: true,
+                labelText: (mainCategoryId == '11') ? 'વેતર/ઉમર વર્ષ' : 'જથ્થો',
+                // prefix: Text('₹  '),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 20.0, horizontal: 12.0),
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 8.0,
+          ),
           Flexible(
             flex: 1,
             child: TextFormField(
@@ -415,35 +468,41 @@ class _AddProductPageState extends State<AddProductPage> {
             width: 8.0,
           ),
           Container(
-            width: 150.0,
-            child: DropDownFormField(
-              titleText: 'માપ',
-              hintText: 'માપ',
-              value: stockUnitId,
-              required: true,
-              onSaved: (value) {
-                setState(() {
-                  stockUnitId = value;
-                });
+            width: 120.0,
+            child: FutureBuilder<List<Map<String, dynamic>>>(
+              initialData: [],
+              future: categoryService.getStockTypes(mainCategoryId),
+              builder: (context,
+                  AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+                List<Map<String, dynamic>> data = [];
+                data = snapshot.data;
+                return DropDownFormField(
+                  titleText: 'માપ',
+                  hintText: 'માપ',
+                  value: stockUnitId,
+                  required: true,
+                  onSaved: (value) {
+                    setState(() {
+                      stockUnitId = value;
+                    });
+                  },
+                  onChanged: (value) {
+                    setState(() {
+                      stockUnitId = value;
+                    });
+                  },
+                  dataSource: (snapshot.hasData)
+                      ? data.map((stockUnit) {
+                          return {
+                            'Id': stockUnit['unit'],
+                            'Name': stockUnit['unit'],
+                          };
+                        }).toList()
+                      : [],
+                  textField: 'Name',
+                  valueField: 'Id',
+                );
               },
-              onChanged: (value) {
-                setState(() {
-                  stockUnitId = value;
-                });
-              },
-              dataSource: (gabhanEnabled)
-                  ? [
-                      {
-                        'Id': 'વેતર',
-                        'Name': 'વેતર',
-                      }
-                    ]
-                  : [
-                      {'Id': 'કિલો', 'Name': 'કિલો'},
-                      {'Id': 'લીટર', 'Name': 'લીટર'},
-                    ],
-              textField: 'Name',
-              valueField: 'Id',
             ),
           ),
         ],
@@ -488,23 +547,86 @@ class _AddProductPageState extends State<AddProductPage> {
           borderRadius: BorderRadius.circular(4.0),
         ),
         color: Theme.of(context).primaryColor,
-        child: Text(
-          'શોધો',
-          style: GoogleFonts.lato(
-            textStyle: Theme.of(context).textTheme.title.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
+        child: (_loading)
+            ? CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(
+                  Theme.of(context).primaryColor,
                 ),
-          ),
-        ),
-        onPressed: () async {
-          String name = nameController.text;
-          String price = priceController.text;
-          String unit = stockUnitId;
+                backgroundColor: Colors.white,
+              )
+            : Text(
+                'શોધો',
+                style: GoogleFonts.lato(
+                  textStyle: Theme.of(context).textTheme.title.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                ),
+              ),
+        onPressed: (_loading)
+            ? null
+            : () async {
+                setState(() {
+                  _loading = true;
+                });
 
-          productService.addProduct(mainCategoryId, subCategoryId,
-              categoryTypeId, name, price, unit, '', _image);
-        },
+                if (_formKey.currentState.validate()) {
+                  // _formKey.currentState.save();
+                  String name = categoryTypes.firstWhere(
+                      (item) => (item['Id'] == categoryTypeId))['Name'];
+                  print('ADD PRODUCT PAGE : 541 - Name : $name');
+                  String stock = stockQuantityController.text;
+                  String price = priceController.text;
+                  String unit = stockUnitId;
+                  milkQuantity = milkQuantityController.text;
+                  productService.addProduct(
+                    mainCategoryId,
+                    name,
+                    organicTypeId,
+                    subCategoryId,
+                    categoryTypeId,
+                    milkQuantity,
+                    milkUnitId,
+                    price,
+                    unit,
+                    stock,
+                    _image,
+                    widget.productId,
+                  );
+
+                  mainCategoryId = null;
+                  name = null;
+                  organicTypeId = null;
+                  subCategoryId = null;
+                  categoryTypeId = null;
+                  milkQuantity = null;
+                  milkUnitId = null;
+                  price = null;
+                  unit = null;
+                  stock = null;
+                  _image = null;
+                  stockQuantityController.text = '';
+                  priceController.text = '';
+                  stockUnitId = '';
+                  milkQuantity = milkQuantityController.text;
+                  setState(() {
+                    _loading = false;
+                  });
+
+                  showDialog(
+                    context: context,
+                    builder:(context){
+                      return AlertDialog(
+                        title: Text('SUCCESS'),
+                        content: Text('Product is successfully added.')
+                      );
+                    }
+                  );
+                }
+                setState(() {
+                  _loading = false;
+                });
+              },
       ),
     );
   }

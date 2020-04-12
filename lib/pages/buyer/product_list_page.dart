@@ -18,14 +18,20 @@ class _ProductListPageState extends State<ProductListPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'ખરીદ',
+            'પ્રોડક્ટ લિસ્ટ',
             style: GoogleFonts.lato(
               textStyle: Theme.of(context).textTheme.title.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor,
                   ),
             ),
           ),
+          titleSpacing: 0.0,
+          elevation: 1.0,
+          backgroundColor: Colors.white,
+          iconTheme: IconThemeData(
+              // color: Colors.black,
+              ),
         ),
         backgroundColor: Colors.white,
         body: (widget.products == null || widget.products.length == 0)

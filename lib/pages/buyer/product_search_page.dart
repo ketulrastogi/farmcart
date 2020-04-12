@@ -66,11 +66,17 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
             'ખરીદ',
             style: GoogleFonts.lato(
               textStyle: Theme.of(context).textTheme.title.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor,
                   ),
             ),
           ),
+          titleSpacing: 0.0,
+          elevation: 1.0,
+          backgroundColor: Colors.white,
+          iconTheme: IconThemeData(
+              // color: Colors.black,
+              ),
         ),
         body: Form(
           key: _formKey,
@@ -153,6 +159,10 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                   organicTypeId = null;
                   stockUnitId = null;
                   stateId = null;
+                  stock = null;
+                  minPrice = null;
+                  maxPrice = null;
+                  milkQuantity = null;
                   stateEnabled = true;
                   subCategoryEnabled = true;
                   categoryTypeEnabled = false;
@@ -350,11 +360,11 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                         flex: 1,
                         child: TextFormField(
                           controller: milkQuantityController,
-                          onSaved: (value) {
-                            setState(() {
-                              milkQuantity = value;
-                            });
-                          },
+                          // onSaved: (value) {
+                          //   setState(() {
+                          //     milkQuantity = value;
+                          //   });
+                          // },
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Milk quantity can not be empty.';
@@ -417,11 +427,11 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
             flex: 1,
             child: TextFormField(
               controller: stockQuantityController,
-              onSaved: (value) {
-                setState(() {
-                  stock = value;
-                });
-              },
+              // onSaved: (value) {
+              //   setState(() {
+              //     stock = value;
+              //   });
+              // },
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Milk quantity can not be empty.';
@@ -493,11 +503,11 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
             flex: 1,
             child: TextFormField(
               controller: minPriceController,
-              onSaved: (value) {
-                setState(() {
-                  minPrice = value;
-                });
-              },
+              // onSaved: (value) {
+              //   setState(() {
+              //     minPrice = value;
+              //   });
+              // },
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Minimum price can not be empty.';
@@ -521,11 +531,11 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
             flex: 1,
             child: TextFormField(
               controller: maxPriceController,
-              onSaved: (value) {
-                setState(() {
-                  maxPrice = value;
-                });
-              },
+              // onSaved: (value) {
+              //   setState(() {
+              //     maxPrice = value;
+              //   });
+              // },
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Maximum price can not be empty.';
@@ -717,25 +727,30 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                   _loading = true;
                 });
                 if (_formKey.currentState.validate()) {
-                  _formKey.currentState.save();
+                  // _formKey.currentState.save();
 
                   print(mainCategory);
 
-                  print('MainCategoryName: $mainCategoryName');
-                  print('MainCategoryId: $mainCategoryId');
-                  print('SubCategoryId: $subCategoryId');
-                  print('UnderSubCategoryId: $categoryTypeId');
-                  print('StockQuantity: $stock');
-                  print('StockUnit: $stockUnitId');
-                  print('MinimumAmount: $minPrice');
-                  print('MaximumAmount: $maxPrice');
-                  print('MilkQuantity: $milkQuantity');
-                  print('MilkUnit: $milkUnitId');
-                  print('OrganicType: $organicTypeId');
-                  print('StateId: $stateId');
-                  print('DistrictId: $districtId');
-                  print('TalukaId: $talukaId');
-                  print('VillageId: $villageId');
+                  milkQuantity = milkQuantityController.text;
+                  stock = stockQuantityController.text;
+                  minPrice = minPriceController.text;
+                  maxPrice = maxPriceController.text;
+
+                  // print('MainCategoryName: $mainCategoryName');
+                  // print('MainCategoryId: $mainCategoryId');
+                  // print('SubCategoryId: $subCategoryId');
+                  // print('UnderSubCategoryId: $categoryTypeId');
+                  // print('StockQuantity: $stock');
+                  // print('StockUnit: $stockUnitId');
+                  // print('MinimumAmount: $minPrice');
+                  // print('MaximumAmount: $maxPrice');
+                  // print('MilkQuantity: $milkQuantity');
+                  // print('MilkUnit: $milkUnitId');
+                  // print('OrganicType: $organicTypeId');
+                  // print('StateId: $stateId');
+                  // print('DistrictId: $districtId');
+                  // print('TalukaId: $talukaId');
+                  // print('VillageId: $villageId');
 
                   List<Map<String, dynamic>> products =
                       await productService.searchProducts(
@@ -743,14 +758,15 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                           mainCategoryId,
                           subCategoryId,
                           categoryTypeId,
-                          // stock,
-                          stockQuantityController.text,
-                          // minPrice,
-                          minPriceController.text,
-                          // maxPrice,
-                          maxPriceController.text,
+                          stock,
+                          // stockQuantityController.text,
+                          minPrice,
+                          // minPriceController.text,
+                          maxPrice,
+                          // maxPriceController.text,
                           milkUnitId,
-                          milkQuantityController.text,
+                          milkQuantity,
+                          // milkQuantityController.text,
                           organicTypeId,
                           stateId,
                           districtId,
@@ -758,7 +774,23 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                           villageId,
                           stockUnitId);
 
-                  _formKey.currentState.reset();
+                  mainCategoryName = null;
+                  mainCategoryId = null;
+                  subCategoryId = null;
+                  categoryTypeId = null;
+                  stock = null;
+                  minPrice = null;
+                  maxPrice = null;
+                  milkUnitId = null;
+                  milkQuantity = null;
+                  organicTypeId = null;
+                  stateId = null;
+                  districtId = null;
+                  talukaId = null;
+                  villageId = null;
+                  stockUnitId = null;
+
+                  // _formKey.currentState.reset();
                   stockQuantityController.text = '';
                   minPriceController.text = '';
                   maxPriceController.text = '';

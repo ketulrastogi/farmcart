@@ -4,12 +4,35 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService with ChangeNotifier {
+  Future<bool> checkMobile(String phoneNumber) async {
+    http.Response response =
+        await http.post('https://api.farmcart.in/api/Signup/Signup', body: {
+      'Mobile': phoneNumber,
+    });
+
+    Map<String, dynamic> body = json.decode(response.body);
+
+    return body['Success'];
+  }
+
+  Future<bool> checkUsername(String username) async {
+    http.Response response =
+        await http.post('https://api.farmcart.in/api/Signup/Signup', body: {
+      'Mobile': username,
+    });
+
+    Map<String, dynamic> body = json.decode(response.body);
+
+    return body['Success'];
+  }
+
   Future<bool> signUp(
     String name,
     String address,
     String country,
     String stateId,
     String districtId,
+    String talukaId,
     String cityId,
     String pincode,
     String email,
@@ -27,6 +50,7 @@ class AuthService with ChangeNotifier {
       'Country': country,
       'State': stateId,
       'Dist': districtId,
+      'Taluka': talukaId,
       'City': cityId,
       'Pincode': pincode,
       'Email': email,

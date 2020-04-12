@@ -125,6 +125,14 @@ class _HomePageState extends State<HomePage> {
                     'Home',
                     style: GoogleFonts.lato(fontWeight: FontWeight.bold),
                   ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomePage(),
+                      ),
+                    );
+                  },
                 ),
                 Divider(
                   indent: 16.0,
