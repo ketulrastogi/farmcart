@@ -14,20 +14,16 @@ class ProductService with ChangeNotifier {
     Map<String, dynamic> userDetails;
     try {
       userDetails = json.decode(_sharedPreferences.getString('userDetails'));
+      http.Response response = await http.get(
+        'https://api.farmcart.in/api/Seller/ViewProduct?userid=${userDetails['Id']}',
+        // 'http://api.farmcart.in/api/Pro/List?id=${userDetails['Id']}',
+      );
+      Map<String, dynamic> body = json.decode(response.body);
+      return [...body['Data']];
     } catch (Exception) {
       userDetails = null;
     }
-
-    http.Response response = await http.get(
-      'https://api.farmcart.in/api/Seller/ViewProduct?userid=${userDetails['Id']}',
-      // 'http://api.farmcart.in/api/Pro/List?id=${userDetails['Id']}',
-    );
-
-    Map<String, dynamic> body = json.decode(response.body);
-
-    // print(body);
-
-    return [...body['Data']];
+    return [];
   }
 
   Future<void> addProduct(
@@ -112,7 +108,9 @@ class ProductService with ChangeNotifier {
     print('Product Added');
     print(body);
     if ((productId == null) || ((productId != null) && (image != null))) {
-      uploadImage(body['Productid'], userDetails['Id'], image);
+      // uploadImage(body['Productid'], userDetails['Id'], image);
+      uploadImage((productId == null) ? body['Productid'] : productId,
+          userDetails['Id'], image);
     }
 
     // Map<String, dynamic> body = json.decode(response.body);
@@ -274,5 +272,27 @@ class ProductService with ChangeNotifier {
     // print(body);
 
     return [...body['Data']][0];
+  }
+
+  Future<void> deleteProductById(String productId) async {
+    SharedPreferences _sharedPreferences =
+        await SharedPreferences.getInstance();
+    Map<String, dynamic> userDetails;
+    try {
+      userDetails = json.decode(_sharedPreferences.getString('userDetails'));
+    } catch (Exception) {
+      userDetails = null;
+    }
+
+    http.Response response = await http.get(
+      'https://api.farmcart.in/api/Seller/DeletePro?sellerid=${userDetails['Id']}&id=$productId',
+      // 'http://api.farmcart.in/api/Pro/List?id=${userDetails['Id']}',
+    );
+
+    Map<String, dynamic> body = json.decode(response.body);
+
+    // print(body);
+
+    // return [...body['Data']][0];
   }
 }

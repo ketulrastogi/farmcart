@@ -76,13 +76,13 @@ class _LoginPageState extends State<LoginPage> {
                 child: TextFormField(
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'username',
+                    labelText: 'Phone Number',
                   ),
                   controller: _usernameController,
                   onSaved: (value) {},
                   validator: (value) {
                     if (value.isEmpty) {
-                      return 'username can not be empty';
+                      return 'Phone number can not be empty';
                     }
                     return null;
                   },

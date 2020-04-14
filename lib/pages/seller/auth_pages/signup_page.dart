@@ -15,7 +15,7 @@ class _SignupPageState extends State<SignupPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
+  // final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _pincodeController = TextEditingController();
@@ -118,12 +118,12 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   controller: _birthdateController,
                   onSaved: (value) {},
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'જન્મ તારીખ ખાલી ના હોવી જોઈએ.';
-                    }
-                    return null;
-                  },
+                  // validator: (value) {
+                  //   if (value.isEmpty) {
+                  //     return 'જન્મ તારીખ ખાલી ના હોવી જોઈએ.';
+                  //   }
+                  //   return null;
+                  // },
                 ),
               ),
               SizedBox(
@@ -134,7 +134,7 @@ class _SignupPageState extends State<SignupPage> {
                   titleText: 'જાતિ',
                   hintText: 'તમારી જાતિ પસંદ કરો',
                   value: gender,
-                  required: true,
+                  // required: true,
                   onSaved: (value) {
                     setState(() {
                       gender = value;
@@ -192,14 +192,14 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   controller: _alternatephoneController,
                   onSaved: (value) {},
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'વૈકલ્પિક ફોન નંબર ખાલી ના હોવો જોઈએ.';
-                    } else if (value.length != 10) {
-                      return 'વૈકલ્પિક ફોન નંબર ફક્ત 10 અંકનો જ હોવો જોઈએ.';
-                    }
-                    return null;
-                  },
+                  // validator: (value) {
+                  //   if (value.isEmpty) {
+                  //     return 'વૈકલ્પિક ફોન નંબર ખાલી ના હોવો જોઈએ.';
+                  //   } else if (value.length != 10) {
+                  //     return 'વૈકલ્પિક ફોન નંબર ફક્ત 10 અંકનો જ હોવો જોઈએ.';
+                  //   }
+                  //   return null;
+                  // },
                 ),
               ),
               SizedBox(
@@ -213,195 +213,24 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   controller: _emailController,
                   onSaved: (value) {},
-                  validator: (value) {
-                    bool emailValid = RegExp(
-                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                        .hasMatch(value);
+                  // validator: (value) {
+                  //   bool emailValid = RegExp(
+                  //           r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                  //       .hasMatch(value);
 
-                    if (value.isEmpty) {
-                      return 'ઈ-મેલ એડ્રેસ ખાલી ના હોવું જોઈએ.';
-                    }
-                    if (!emailValid) {
-                      return 'આ ઈમેલ એડ્રેસ માન્ય નથી.';
-                    }
-                    return null;
-                  },
+                  //   if (value.isEmpty) {
+                  //     return 'ઈ-મેલ એડ્રેસ ખાલી ના હોવું જોઈએ.';
+                  //   }
+                  //   if (!emailValid) {
+                  //     return 'આ ઈમેલ એડ્રેસ માન્ય નથી.';
+                  //   }
+                  //   return null;
+                  // },
                 ),
               ),
               SizedBox(
                 height: 8.0,
               ),
-              // Container(
-              //   child: FutureBuilder<List<Map<String, dynamic>>>(
-              //     future: locationService.getStates(),
-              //     initialData: [
-              //     ],
-              //     builder: (BuildContext context,
-              //         AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
-              //       if (snapshot.hasData) {
-              //         return DropDownFormField(
-              //           titleText: 'રાજ્ય',
-              //           hintText: 'રાજ્ય',
-              //           value: stateId,
-              //           required: true,
-              //           onSaved: (value) {
-              //             setState(() {
-              //               stateId = value;
-              //             });
-              //           },
-              //           onChanged: (value) {
-              //             setState(() {
-              //               stateId = value;
-              //               districtId = null;
-              //               talukaId = null;
-              //               villageCityId = null;
-              //               districtEnabled = true;
-              //               talukaEnabled = false;
-              //               cityEnabled = false;
-              //             });
-              //           },
-              //           dataSource: snapshot.data,
-              //           textField: 'Name',
-              //           valueField: 'Id',
-              //         );
-              //       } else {
-              //         return Center(
-              //           child: Container(
-              //             child: CircularProgressIndicator(),
-              //           ),
-              //         );
-              //       }
-              //     },
-              //   ),
-              // ),
-              // SizedBox(
-              //   height: 8.0,
-              // ),
-              // Container(
-              //   child: FutureBuilder<List<Map<String, dynamic>>>(
-              //     future: locationService.getDistricts(stateId),
-              //     initialData: [],
-              //     builder: (BuildContext context,
-              //         AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
-              //       if (snapshot.hasData) {
-              //         return DropDownFormField(
-              //           titleText: 'જિલ્લો',
-              //           hintText: 'જિલ્લો',
-              //           value: districtId,
-              //           required: true,
-              //           onSaved: (value) {
-              //             setState(() {
-              //               districtId = value;
-              //             });
-              //           },
-              //           onChanged: (value) {
-              //             setState(() {
-              //               districtId = value;
-              //               talukaId = null;
-              //               villageCityId = null;
-              //               talukaEnabled = true;
-              //               cityEnabled = false;
-              //             });
-              //           },
-              //           dataSource: districtEnabled ? snapshot.data : [],
-              //           textField: 'Name',
-              //           valueField: 'Id',
-              //         );
-              //       } else {
-              //         return Center(
-              //           child: Container(
-              //             child: CircularProgressIndicator(),
-              //           ),
-              //         );
-              //       }
-              //     },
-              //   ),
-              // ),
-              // SizedBox(
-              //   height: 8.0,
-              // ),
-              // Container(
-              //   child: FutureBuilder<List<Map<String, dynamic>>>(
-              //     future: locationService.getTehsils(districtId),
-              //     initialData: [],
-              //     builder: (BuildContext context,
-              //         AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
-              //       if (snapshot.hasData) {
-              //         return DropDownFormField(
-              //           titleText: 'તાલુકો',
-              //           hintText: 'તાલુકો',
-              //           value: talukaId,
-              //           required: true,
-              //           onSaved: (value) {
-              //             setState(() {
-              //               talukaId = value;
-              //             });
-              //           },
-              //           onChanged: (value) {
-              //             setState(() {
-              //               talukaId = value;
-              //               villageCityId = null;
-              //               cityEnabled = true;
-              //             });
-              //           },
-              //           dataSource: talukaEnabled ? snapshot.data : [],
-              //           textField: 'Name',
-              //           valueField: 'Id',
-              //         );
-              //       } else {
-              //         return Center(
-              //           child: Container(
-              //             child: CircularProgressIndicator(),
-              //           ),
-              //         );
-              //       }
-              //     },
-              //   ),
-              // ),
-              // SizedBox(
-              //   height: 8.0,
-              // ),
-              // Container(
-              //   child: FutureBuilder<List<Map<String, dynamic>>>(
-              //     future: locationService.getCities(talukaId, districtId),
-              //     initialData: [],
-              //     builder: (BuildContext context,
-              //         AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
-              //       if (snapshot.hasData) {
-              //         return DropDownFormField(
-              //           titleText: 'શહેર / ગામ',
-              //           hintText: 'શહેર / ગામ',
-              //           value: villageCityId,
-              //           required: true,
-              //           onSaved: (value) {
-              //             setState(() {
-              //               villageCityId = value;
-              //             });
-              //           },
-              //           onChanged: (value) async {
-              //             setState(() {
-              //               villageCityId = value;
-              //             });
-
-              //             // List<Map<String, dynamic>> pincodeData =
-              //             //     await locationService.getPincode(value);
-              //             // _pincodeController.text = pincodeData[0]['Name'];
-              //           },
-              //           dataSource: cityEnabled ? snapshot.data : [],
-              //           textField: 'Name',
-              //           valueField: 'Id',
-              //         );
-              //       } else {
-              //         return Center(
-              //           child: Container(
-              //             child: CircularProgressIndicator(),
-              //           ),
-              //         );
-              //       }
-              //     },
-              //   ),
-              // ),
-
               SizedBox(
                 height: 8.0,
               ),
@@ -418,7 +247,6 @@ class _SignupPageState extends State<SignupPage> {
                 height: 8.0,
               ),
               villageCityDropdownWidget(context, locationService),
-
               SizedBox(
                 height: 8.0,
               ),
@@ -432,12 +260,12 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   keyboardType: TextInputType.number,
                   controller: _pincodeController,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'પીનકોડ ખાલી ના હોવો જોઈએ.';
-                    }
-                    return null;
-                  },
+                  // validator: (value) {
+                  //   if (value.isEmpty) {
+                  //     return 'પીનકોડ ખાલી ના હોવો જોઈએ.';
+                  //   }
+                  //   return null;
+                  // },
                   onSaved: (value) {
                     setState(() {
                       pincode = value;
@@ -455,12 +283,12 @@ class _SignupPageState extends State<SignupPage> {
                     labelText: 'સરનામું',
                   ),
                   maxLines: 4,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'સરનામું ખાલી ના હોવું જોઈએ.';
-                    }
-                    return null;
-                  },
+                  // validator: (value) {
+                  //   if (value.isEmpty) {
+                  //     return 'સરનામું ખાલી ના હોવું જોઈએ.';
+                  //   }
+                  //   return null;
+                  // },
                   controller: _addressController,
                   onSaved: (value) {
                     setState(() {
@@ -472,23 +300,59 @@ class _SignupPageState extends State<SignupPage> {
               SizedBox(
                 height: 8.0,
               ),
-              Container(
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    // border: OutlineInputBorder(),
-                    filled: true,
-                    labelText: 'યુઝર આઈડી',
+              ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(4.0),
+                  topRight: Radius.circular(4.0),
+                ),
+                child: Container(
+                  height: 64.0,
+                  padding: EdgeInsets.only(left: 12.0),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.black45,
+                      ),
+                    ),
+                    color: Colors.grey.shade100,
                   ),
-                  controller: _usernameController,
-                  onSaved: (value) {},
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'યુઝર આઈડી ખાલી ના હોવું જોઈએ.';
-                    }
-                    return null;
-                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'યુઝરનેમ',
+                        style: Theme.of(context).textTheme.caption,
+                      ),
+                      Text(
+                        _phoneController.text,
+                        style: Theme.of(context).textTheme.subhead,
+                      ),
+                    ],
+                  ),
                 ),
               ),
+              // SizedBox(
+              //   height: 8.0,
+              // ),
+              // Container(
+              //   child: TextFormField(
+              //     decoration: InputDecoration(
+              //       // border: OutlineInputBorder(),
+              //       filled: true,
+              //       labelText: 'યુઝરનેમ',
+              //     ),
+              //     controller: _phoneController,
+              //     onSaved: (value) {},
+              //     validator: (value) {
+              //       if (value.isEmpty) {
+              //         return 'યુઝર આઈડી ખાલી ના હોવું જોઈએ.';
+              //       }
+              //       return null;
+              //     },
+              //     // enabled: false,
+              //   ),
+              // ),
               SizedBox(
                 height: 8.0,
               ),
@@ -507,6 +371,7 @@ class _SignupPageState extends State<SignupPage> {
                     }
                     return null;
                   },
+                  obscureText: true,
                 ),
               ),
               SizedBox(
@@ -551,14 +416,30 @@ class _SignupPageState extends State<SignupPage> {
                     });
                     if (_formKey.currentState.validate()) {
                       String name = _nameController.text;
-                      String username = _usernameController.text;
+                      String username = _phoneController.text;
                       String password = _passwordController.text;
-                      String email = _emailController.text;
+                      String email = (_emailController.text == null ||
+                              _emailController.text == '')
+                          ? 'test@test.com'
+                          : _emailController.text;
                       String mobile = _phoneController.text;
-                      String pincode = _pincodeController.text;
-                      String address = _addressController.text;
-                      String alternateNo = _alternatephoneController.text;
-                      String birthdate = _birthdateController.text;
+                      String pincode = (_pincodeController.text == null ||
+                              _pincodeController.text == '')
+                          ? '999999'
+                          : _pincodeController.text;
+                      String address = (_addressController.text == null ||
+                              _addressController.text == '')
+                          ? 'Address'
+                          : _addressController.text;
+                      String alternateNo =
+                          (_alternatephoneController.text == null ||
+                                  _alternatephoneController.text == '')
+                              ? '999999999'
+                              : _alternatephoneController.text;
+                      String birthdate = (_birthdateController.text == null ||
+                              _birthdateController.text == '')
+                          ? '01/01/2000'
+                          : _birthdateController.text;
 
                       bool registeredMobile =
                           await _authService.checkMobile(mobile);
@@ -602,7 +483,7 @@ class _SignupPageState extends State<SignupPage> {
                         _pincodeController.text = '';
                         _addressController.text = '';
                         _birthdateController.text = '';
-                        _usernameController.text = '';
+                        // _usernameController.text = '';
                         _passwordController.text = '';
                         _formKey.currentState.reset();
 
@@ -618,7 +499,7 @@ class _SignupPageState extends State<SignupPage> {
                           email,
                           mobile,
                           alternateNo,
-                          gender,
+                          (gender == null || gender == '') ? 'Male' : gender,
                           birthdate,
                           username,
                           password,
@@ -630,7 +511,7 @@ class _SignupPageState extends State<SignupPage> {
                                 return AlertDialog(
                                   title: Text('SUCCESS'),
                                   content: Text(
-                                      'Your account is created succesfullu.'),
+                                      'Your account is created succesfully.'),
                                 );
                               });
 
@@ -734,7 +615,8 @@ class _SignupPageState extends State<SignupPage> {
                 cityEnabled = false;
               });
             },
-            dataSource: (districtEnabled) ? snapshot.data : [],
+            dataSource:
+                (districtEnabled && snapshot.hasData) ? snapshot.data : [],
             textField: 'Name',
             valueField: 'Id',
           );
@@ -766,7 +648,8 @@ class _SignupPageState extends State<SignupPage> {
                 cityEnabled = true;
               });
             },
-            dataSource: (talukaEnabled) ? snapshot.data : [],
+            dataSource:
+                (talukaEnabled && snapshot.hasData) ? snapshot.data : [],
             textField: 'Name',
             valueField: 'Id',
           );
@@ -796,7 +679,7 @@ class _SignupPageState extends State<SignupPage> {
                 villageCityId = value;
               });
             },
-            dataSource: (cityEnabled) ? snapshot.data : [],
+            dataSource: (cityEnabled && snapshot.hasData) ? snapshot.data : [],
             textField: 'Name',
             valueField: 'Id',
           );

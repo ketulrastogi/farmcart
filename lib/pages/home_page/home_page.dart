@@ -1,12 +1,16 @@
 import 'package:farmcart/models/main_category_model.dart';
 import 'package:farmcart/pages/buyer/product_search_page.dart';
+import 'package:farmcart/pages/contact_us_page.dart';
 import 'package:farmcart/pages/seller/auth_pages/auth_page.dart';
 import 'package:farmcart/pages/seller/seller_home_page.dart';
+import 'package:farmcart/pages/web_viewer_page.dart';
 import 'package:farmcart/services/category_service.dart';
 import 'package:farmcart/widgets/carousel_slider_widget.dart';
+import 'package:farmcart/widgets/marquee_text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -97,6 +101,38 @@ class _HomePageState extends State<HomePage> {
             ),
             CarouselSliderWidget(),
             SizedBox(
+              height: 8.0,
+            ),
+            AutoScrollText(
+              // height: 56.0,
+              items: <Widget>[
+                Container(
+                  width: MediaQuery.of(context).size.width * 2.5,
+                  alignment: Alignment.center,
+                  child: InkWell(
+                    onTap: () async {
+                      const url =
+                          'https://www.youtube.com/channel/UC4YkDw7nT6nZX43Wa85CpIQ';
+                      if (await canLaunch(url)) {
+                        await launch(url);
+                      } else {
+                        throw 'Could not launch $url';
+                      }
+                    },
+                    child: Text(
+                      "વિડિઓ જોવા માટે અહીંયા ક્લીક કરો.",
+                      style: GoogleFonts.lato(
+                        textStyle: Theme.of(context).textTheme.subhead.copyWith(
+                              fontWeight: FontWeight.w900,
+                              color: Theme.of(context).accentColor,
+                            ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
               height: 16.0,
             ),
             MainCategoriesListWidget(),
@@ -138,13 +174,69 @@ class _HomePageState extends State<HomePage> {
                   indent: 16.0,
                 ),
                 ListTile(
-                  title: Text('About Us'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ContactUsPage(),
+                      ),
+                    );
+                  },
+                  title: Text('Contact Us'),
                 ),
                 Divider(
                   indent: 16.0,
                 ),
                 ListTile(
-                  title: Text('Contact Us'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => WebViewerPage(
+                          title: 'Privacy Policy',
+                          url:
+                              'https://farmcart.in/Pagedetail.aspx?pageid=n47QIBL1esUajosHZp2n',
+                        ),
+                      ),
+                    );
+                  },
+                  title: Text('Privacy Policy'),
+                ),
+                Divider(
+                  indent: 16.0,
+                ),
+                ListTile(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => WebViewerPage(
+                          title: 'Terms & Conditions',
+                          url:
+                              'https://farmcart.in/Pagedetail.aspx?pageid=5KZCNN649fc8Jcq26Cui',
+                        ),
+                      ),
+                    );
+                  },
+                  title: Text('Terms & Conditions'),
+                ),
+                Divider(
+                  indent: 16.0,
+                ),
+                ListTile(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => WebViewerPage(
+                          title: 'Return & Refund Policy',
+                          url:
+                              'https://farmcart.in/Pagedetail.aspx?pageid=X6j6KR2mVubBHB0QPedw',
+                        ),
+                      ),
+                    );
+                  },
+                  title: Text('Return & Refund Policy'),
                 ),
                 Divider(
                   indent: 16.0,

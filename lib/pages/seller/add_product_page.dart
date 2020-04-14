@@ -83,7 +83,17 @@ class _AddProductPageState extends State<AddProductPage> {
     }
   }
 
-  Future getImage() async {
+  Future getCameraImage() async {
+    var image = await ImagePicker.pickImage(
+      source: ImageSource.camera,
+    );
+
+    setState(() {
+      _image = image;
+    });
+  }
+
+  Future getGalleryImage() async {
     var image = await ImagePicker.pickImage(
       source: ImageSource.gallery,
     );
@@ -103,7 +113,7 @@ class _AddProductPageState extends State<AddProductPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'ખરીદ',
+            'વેચાણ',
             style: GoogleFonts.lato(
               textStyle: Theme.of(context).textTheme.title.copyWith(
                     fontWeight: FontWeight.bold,
@@ -517,13 +527,59 @@ class _AddProductPageState extends State<AddProductPage> {
         children: <Widget>[
           RaisedButton(
             color: Colors.white,
-            child: Text(
-              'SELECT IMAGE',
-              style: TextStyle(
-                color: Theme.of(context).primaryColor,
-              ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
             ),
-            onPressed: getImage,
+            child: Row(
+              children: <Widget>[
+                Icon(
+                  Icons.photo,
+                  size: 20.0,
+                  color: Theme.of(context).primaryColor,
+                ),
+                SizedBox(
+                  width: 4.0,
+                ),
+                Text(
+                  'ગેલેરી',
+                  style: GoogleFonts.lato(
+                    textStyle: Theme.of(context).textTheme.subtitle.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                  ),
+                ),
+              ],
+            ),
+            onPressed: getGalleryImage,
+          ),
+          RaisedButton(
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            child: Row(
+              children: <Widget>[
+                Icon(
+                  Icons.photo_camera,
+                  size: 20.0,
+                  color: Theme.of(context).primaryColor,
+                ),
+                SizedBox(
+                  width: 4.0,
+                ),
+                Text(
+                  'કેમેરા',
+                  style: GoogleFonts.lato(
+                    textStyle: Theme.of(context).textTheme.subtitle.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                  ),
+                ),
+              ],
+            ),
+            onPressed: getCameraImage,
           ),
           Container(
             height: 80.0,
@@ -555,7 +611,7 @@ class _AddProductPageState extends State<AddProductPage> {
                 backgroundColor: Colors.white,
               )
             : Text(
-                'શોધો',
+                'સબમિટ',
                 style: GoogleFonts.lato(
                   textStyle: Theme.of(context).textTheme.title.copyWith(
                         fontWeight: FontWeight.w700,
@@ -579,7 +635,7 @@ class _AddProductPageState extends State<AddProductPage> {
                   String price = priceController.text;
                   String unit = stockUnitId;
                   milkQuantity = milkQuantityController.text;
-                  productService.addProduct(
+                  await productService.addProduct(
                     mainCategoryId,
                     name,
                     organicTypeId,
@@ -612,16 +668,24 @@ class _AddProductPageState extends State<AddProductPage> {
                   setState(() {
                     _loading = false;
                   });
-
-                  showDialog(
-                    context: context,
-                    builder:(context){
-                      return AlertDialog(
-                        title: Text('SUCCESS'),
-                        content: Text('Product is successfully added.')
-                      );
-                    }
-                  );
+                  Navigator.pop(context);
+                  (widget.productId != null || widget.productId != '')
+                      ? showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                                title: Text('SUCCESS'),
+                                content:
+                                    Text('Product is successfully updated.'));
+                          })
+                      : showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                                title: Text('SUCCESS'),
+                                content:
+                                    Text('Product is successfully added.'));
+                          });
                 }
                 setState(() {
                   _loading = false;

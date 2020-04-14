@@ -4,6 +4,7 @@ import 'package:farmcart/services/product_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProductPage extends StatefulWidget {
   final Map<String, dynamic> product;
@@ -522,27 +523,69 @@ class _ProductPageState extends State<ProductPage>
                               ),
                             ],
                           ),
-                          trailing: FloatingActionButton(
-                            elevation: 2.0,
-                            child: Icon(
-                              Icons.email,
-                              color: Colors.white,
-                            ),
-                            onPressed: () {
-                              print('ProductPage: 458 - ${widget.product}');
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => OrderInquiryPage(
-                                    productId: productId,
-                                    unitId: widget.product['unit'],
-                                    sellerId: seller['Id'],
-                                    // product: widget.product['Data'][0],
-                                    // productData: widget.productData,
+                          trailing: Container(
+                            width: 140.0,
+                            height: 56.0,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                InkWell(
+                                  onTap: () async {
+                                    String url = 'tel:+91${seller['Mobile']}';
+                                    if (await canLaunch(url)) {
+                                      await launch(url);
+                                    } else {
+                                      throw 'Could not launch $url';
+                                    }
+                                  },
+                                  child: Container(
+                                    height: 40.0,
+                                    width: 40.0,
+                                    child: Image.asset('call.png'),
                                   ),
                                 ),
-                              );
-                            },
+                                InkWell(
+                                  onTap: () async {
+                                    String url =
+                                        'https://wa.me/91${seller['Mobile']}';
+                                    if (await canLaunch(url)) {
+                                      await launch(url);
+                                    } else {
+                                      throw 'Could not launch $url';
+                                    }
+                                  },
+                                  child: Container(
+                                    width: 40.0,
+                                    height: 40.0,
+                                    child: Image.asset('whatsapp.png'),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    print(
+                                        'ProductPage: 458 - ${widget.product}');
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => OrderInquiryPage(
+                                          productId: productId,
+                                          unitId: widget.product['unit'],
+                                          sellerId: seller['Id'],
+                                          // product: widget.product['Data'][0],
+                                          // productData: widget.productData,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 40.0,
+                                    width: 40.0,
+                                    child: Image.asset('email.png'),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },

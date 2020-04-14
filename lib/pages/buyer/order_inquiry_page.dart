@@ -412,7 +412,7 @@ class _OrderInquiryPageState extends State<OrderInquiryPage> {
             padding: EdgeInsets.symmetric(vertical: 16.0),
             color: Colors.green,
             child: Text(
-              'SUBMIT INQUIRY',
+              'સબમિટ',
               style: GoogleFonts.lato(
                 textStyle: Theme.of(context).textTheme.subhead.copyWith(
                       fontWeight: FontWeight.bold,

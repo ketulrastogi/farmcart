@@ -104,4 +104,29 @@ class AuthService with ChangeNotifier {
         await SharedPreferences.getInstance();
     _sharedPreferences.setString('userDetails', '');
   }
+
+  Future<void> changePassword(String password) async {
+    Future<bool> signIn(String username, String password) async {
+      SharedPreferences _sharedPreferences =
+          await SharedPreferences.getInstance();
+      Map<String, dynamic> userDetails;
+      try {
+        userDetails = json.decode(_sharedPreferences.getString('userDetails'));
+      } catch (Exception) {
+        userDetails = null;
+      }
+
+      http.Response response = await http.post(
+        'https://api.farmcart.in/api/Seller/UpdatePassword',
+        body: {
+          'id': userDetails['Id'],
+          'password': password,
+        },
+      );
+
+      Map<String, dynamic> body = json.decode(response.body);
+
+      print(body);
+    }
+  }
 }

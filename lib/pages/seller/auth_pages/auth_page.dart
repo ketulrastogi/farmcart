@@ -6,6 +6,7 @@ import 'package:farmcart/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AuthPage extends StatefulWidget {
   // final bool isSeller;
@@ -85,14 +86,14 @@ class _AuthPageState extends State<AuthPage> {
                           decoration: InputDecoration(
                             // border: OutlineInputBorder(),
                             filled: true,
-                            prefixIcon: Icon(Icons.person),
-                            labelText: 'યુઝર આઈડી',
+                            prefixIcon: Icon(Icons.phone_android),
+                            labelText: 'યુઝરનેમ',
                           ),
                           controller: _usernameController,
                           onSaved: (value) {},
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'યુઝર આઈડી ખાલી ના હોવું જોઈએ.';
+                              return 'યુઝરનેમ ખાલી ના હોવું જોઈએ.';
                             }
                             return null;
                           },
@@ -117,6 +118,7 @@ class _AuthPageState extends State<AuthPage> {
                             }
                             return null;
                           },
+                          obscureText: true,
                         ),
                       ),
                       SizedBox(
@@ -207,7 +209,7 @@ class _AuthPageState extends State<AuthPage> {
                             borderRadius: BorderRadius.circular(4.0),
                           ),
                           child: Text(
-                            'નવા એકાઉન્ટ માટે અહીં ક્લિક કરો',
+                            'નવા રજીસ્ટ્રેશન માટે ક્લીક કરો',
                             style: GoogleFonts.lato(
                               textStyle:
                                   Theme.of(context).textTheme.title.copyWith(

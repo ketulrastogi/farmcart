@@ -92,14 +92,16 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                 height: 8.0,
               ),
               categoryTypeDropdownWidget(context, _categoryService),
-              SizedBox(
-                height: 8.0,
-              ),
-              organicTypeDropdownWidget(context, _categoryService),
+
+              (mainCategoryId == '11')
+                  ? SizedBox(
+                      height: 8.0,
+                    )
+                  : organicTypeDropdownWidget(context, _categoryService),
               gabhanTypeDropdownWidget(context, _categoryService),
-              SizedBox(
-                height: 8.0,
-              ),
+              // SizedBox(
+              //   height: 8.0,
+              // ),
               quantityAndUnitRowWidget(context, _categoryService),
               SizedBox(
                 height: 8.0,
@@ -288,31 +290,41 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
 
   Widget organicTypeDropdownWidget(
       BuildContext context, CategoryService categoryService) {
-    return Container(
-      child: DropDownFormField(
-        titleText: 'ઓર્ગેનીક પ્રકાર',
-        hintText: 'ઓર્ગેનીક પ્રકાર',
-        value: organicTypeId,
-        required: true,
-        onSaved: (value) {
-          setState(() {
-            organicTypeId = value;
-          });
-        },
-        onChanged: (value) {
-          setState(() {
-            organicTypeId = value;
-          });
-        },
-        dataSource: (organicTypeEnabled)
-            ? [
-                {'Id': 'organic', 'Name': 'ઓર્ગેનીક'},
-                {'Id': 'nonorganic', 'Name': 'બિન-ઓર્ગેનીક'},
-              ]
-            : [],
-        textField: 'Name',
-        valueField: 'Id',
-      ),
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: 8.0,
+        ),
+        Container(
+          child: DropDownFormField(
+            titleText: 'ઓર્ગેનીક પ્રકાર',
+            hintText: 'ઓર્ગેનીક પ્રકાર',
+            value: organicTypeId,
+            required: true,
+            onSaved: (value) {
+              setState(() {
+                organicTypeId = value;
+              });
+            },
+            onChanged: (value) {
+              setState(() {
+                organicTypeId = value;
+              });
+            },
+            dataSource: (organicTypeEnabled)
+                ? [
+                    {'Id': 'organic', 'Name': 'ઓર્ગેનીક'},
+                    {'Id': 'nonorganic', 'Name': 'બિન-ઓર્ગેનીક'},
+                  ]
+                : [],
+            textField: 'Name',
+            valueField: 'Id',
+          ),
+        ),
+        SizedBox(
+          height: 8.0,
+        ),
+      ],
     );
   }
 
@@ -322,9 +334,6 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
         ? Container(
             child: Column(
               children: <Widget>[
-                SizedBox(
-                  height: 8.0,
-                ),
                 Container(
                   child: Row(
                     children: <Widget>[
@@ -751,7 +760,8 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                   // print('DistrictId: $districtId');
                   // print('TalukaId: $talukaId');
                   // print('VillageId: $villageId');
-
+                  organicTypeId =
+                      (mainCategoryId == '11') ? 'organic' : organicTypeId;
                   List<Map<String, dynamic>> products =
                       await productService.searchProducts(
                           mainCategoryName,
