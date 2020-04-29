@@ -88,6 +88,9 @@ class _AddProductPageState extends State<AddProductPage> {
   Future getCameraImage() async {
     File file = await ImagePicker.pickImage(
       source: ImageSource.camera,
+      imageQuality: 80,
+      maxHeight: 800,
+      maxWidth: 800
     );
 
     setState(() {

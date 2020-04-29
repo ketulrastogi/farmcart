@@ -63,12 +63,12 @@ class ProductService with ChangeNotifier {
     print('MilkUnit: ${(mainCategoryId == '11') ? milkUnit : ''}');
     print('Price: $price');
     print(' Unit: $unit');
-    print(' Image: ${(image != null) ? image.uri.toString() : ''}');
-    print('Vetar: ${(mainCategoryId == '11') ? stock : ''}');
+    print(' Image: ${(image != null) ? image.uri.toString() : '%00'}');
+    print('Vetar: ${(mainCategoryId == '11') ? stock : '%00'}');
     String userId = userDetails['Id'];
-    String milkqty = (mainCategoryId == '11') ? milkQuantity : '';
-    String milkunit = (mainCategoryId == '11') ? milkUnit : '';
-    String vetar = (mainCategoryId == '11') ? stock : '';
+    String milkqty = (mainCategoryId == '11') ? milkQuantity : '%00';
+    String milkunit = (mainCategoryId == '11') ? milkUnit : '%00';
+    String vetar = (mainCategoryId == '11') ? stock : '%00';
     String organicType = (mainCategoryId == '11') ? 'organic' : organicTypeId;
     String articleno = (mainCategoryId == '11') ? 'Test' : stock;
     print('MilkQty: $milkqty, milkUnit: $milkunit, Vetar: $vetar');
@@ -120,7 +120,7 @@ class ProductService with ChangeNotifier {
     print(body);
     if ((productId == null) || ((productId != null) && (image != null))) {
       // uploadImage(body['Productid'], userDetails['Id'], image);
-      uploadImage((productId == null) ? body['Productid'] : productId,
+      await uploadImage((productId == null) ? body['Productid'] : productId,
           userDetails['Id'], image);
     }
 
