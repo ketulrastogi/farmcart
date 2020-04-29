@@ -38,6 +38,8 @@ class _SellerHomePageState extends State<SellerHomePage> {
           actions: <Widget>[
             RaisedButton(
               color: Theme.of(context).primaryColor,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0)),
               child: Text(
                 'ખરીદ',
                 style: GoogleFonts.lato(
@@ -58,6 +60,8 @@ class _SellerHomePageState extends State<SellerHomePage> {
             ),
             RaisedButton(
               color: Theme.of(context).accentColor,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(0)),
               child: Text(
                 'વેચાણ',
                 style: GoogleFonts.lato(
@@ -242,6 +246,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
             ),
           ),
         ),
+        backgroundColor: Colors.orange.shade100,
         body: FutureBuilder<List<Map<String, dynamic>>>(
           future: _productService.getProducts(),
           builder:
@@ -286,7 +291,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                               MaterialPageRoute(
                                 builder: (context) => AddProductPage(
                                   productId: product['Id'],
-                                  product: data,
+                                  product: {...data, 'Photo': product['Photo']},
                                 ),
                               ),
                             );
@@ -310,6 +315,20 @@ class _SellerHomePageState extends State<SellerHomePage> {
                                       title: Text('SUCCESS'),
                                       content: Text(
                                           'Product is deleted successfully.'),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          color: Theme.of(context).primaryColor,
+                                          child: Text(
+                                            'OK',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ],
                                     );
                                   });
                               setState(() {});
@@ -321,6 +340,20 @@ class _SellerHomePageState extends State<SellerHomePage> {
                                       title: Text('ERROR'),
                                       content: Text(
                                           'An error occured while deleting a product.'),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          color: Theme.of(context).primaryColor,
+                                          child: Text(
+                                            'OK',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ],
                                     );
                                   });
                             }
@@ -336,7 +369,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                           borderRadius: BorderRadius.circular(32.0),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.grey.shade100,
+                              color: Colors.orange.shade200,
                               blurRadius: 4.0,
                               spreadRadius: 4.0,
                             ),
@@ -346,9 +379,9 @@ class _SellerHomePageState extends State<SellerHomePage> {
                           product['ProductName'],
                           style: GoogleFonts.lato(
                             textStyle:
-                                Theme.of(context).textTheme.subhead.copyWith(
+                                Theme.of(context).textTheme.title.copyWith(
                                       fontWeight: FontWeight.w700,
-                                      // color: Colors.white,
+                                      color: Colors.orange,
                                     ),
                           ),
                         ),
@@ -358,14 +391,16 @@ class _SellerHomePageState extends State<SellerHomePage> {
                           width: 56.0,
                           // margin: EdgeInsets.only(left: 8.0),
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(32.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.shade100,
-                                  blurRadius: 4.0,
-                                  spreadRadius: 4.0,
-                                ),
-                              ]),
+                            borderRadius: BorderRadius.circular(32.0),
+                            color: Colors.white,
+                            // boxShadow: [
+                            //   BoxShadow(
+                            //     color: Colors.orange.shade100,
+                            //     blurRadius: 4.0,
+                            //     spreadRadius: 4.0,
+                            //   ),
+                            // ],
+                          ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(32.0),
                             child: Image.network(

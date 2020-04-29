@@ -2,6 +2,7 @@ import 'package:farmcart/models/main_category_model.dart';
 import 'package:farmcart/pages/buyer/product_search_page.dart';
 import 'package:farmcart/pages/contact_us_page.dart';
 import 'package:farmcart/pages/seller/auth_pages/auth_page.dart';
+import 'package:farmcart/pages/seller/auth_pages/signup_page.dart';
 import 'package:farmcart/pages/seller/seller_home_page.dart';
 import 'package:farmcart/pages/web_viewer_page.dart';
 import 'package:farmcart/services/category_service.dart';
@@ -92,7 +93,7 @@ class _HomePageState extends State<HomePage> {
               // color: Colors.white,
               ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.yellow.shade100,
         body: ListView(
           // padding: EdgeInsets.only(top: 8.0),
           children: <Widget>[
@@ -135,7 +136,58 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               height: 16.0,
             ),
-            MainCategoriesListWidget(),
+            // MainCategoriesListViewWidget(),
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  RaisedButton(
+                    child: Text(
+                      'લોગીન',
+                      style: GoogleFonts.lato(
+                        textStyle: Theme.of(context).textTheme.subhead.copyWith(
+                              fontWeight: FontWeight.w900,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                      ),
+                    ),
+                    color: Colors.white,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AuthPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  RaisedButton(
+                    child: Text(
+                      'રજીસ્ટ્રેશન',
+                      style: GoogleFonts.lato(
+                        textStyle: Theme.of(context).textTheme.subhead.copyWith(
+                              fontWeight: FontWeight.w900,
+                              color: Theme.of(context).accentColor,
+                            ),
+                      ),
+                    ),
+                    color: Colors.white,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SignupPage(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 16.0,
+            ),
+            CategorySliderWidget(),
           ],
         ),
         drawer: Drawer(
@@ -250,7 +302,93 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class MainCategoriesListWidget extends StatelessWidget {
+class MainCategoriesListViewWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final CategoryService categoryService =
+        Provider.of<CategoryService>(context);
+    return FutureBuilder<List<MainCategoryModel>>(
+        future: categoryService.getMainCategories(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Container(
+              height: 120.0,
+              child: ListView.builder(
+                padding: EdgeInsets.all(8.0),
+                itemCount: snapshot.data.length,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  MainCategoryModel product = snapshot.data[index];
+                  return Container(
+                    height: 120.0,
+                    width: 120.0,
+                    margin: EdgeInsets.symmetric(horizontal: 8.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.0),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.blueGrey.shade50,
+                            blurRadius: 2.0,
+                            spreadRadius: 2.0)
+                      ],
+                    ),
+                    child: Stack(
+                      children: <Widget>[
+                        Positioned(
+                          top: 0.0,
+                          left: 0.0,
+                          right: 0.0,
+                          bottom: 32.0,
+                          child: ClipRRect(
+                            borderRadius: new BorderRadius.only(
+                                topRight: Radius.circular(8.0),
+                                topLeft: Radius.circular(8.0)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Image.network(
+                                product.imageUrl,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 8.0,
+                          left: 0.0,
+                          child: Container(
+                            width: MediaQuery.of(context).size.width / 3 - 12,
+                            child: Center(
+                              child: Text(
+                                product.name,
+                                style: GoogleFonts.lato(
+                                  textStyle: Theme.of(context)
+                                      .textTheme
+                                      .caption
+                                      .copyWith(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            );
+          } else {
+            return Center(
+              child: Container(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+        });
+  }
+}
+
+class MainCategoriesGridViewWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final CategoryService categoryService =

@@ -33,78 +33,92 @@ class _ProductListPageState extends State<ProductListPage> {
               // color: Colors.black,
               ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.green.shade100,
         body: (widget.products == null || widget.products.length == 0)
             ? Center(
                 child: Text('Products are not available.'),
               )
             : ListView.separated(
-                // padding: EdgeInsets.all(16.0),
-
+                padding: EdgeInsets.symmetric(vertical: 16.0),
                 itemCount: widget.products.length,
                 itemBuilder: (context, index) {
                   Map<String, dynamic> product = widget.products[index];
 
-                  return ListTile(
-                    isThreeLine: true,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProductPage(
-                            product: product,
+                  return Container(
+                    margin: EdgeInsets.symmetric(horizontal: 16.0),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(32.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.green.shade200,
+                            blurRadius: 4.0,
+                            spreadRadius: 4.0,
                           ),
-                        ),
-                      );
-                    },
-                    leading: Container(
-                      // alignment: Alignment.center,
-                      // padding: EdgeInsets.only(top: 12.0),
-                      // color: Colors.amber,
-                      width: 56.0,
-                      height: 56.0,
-                      // child: Image.asset('no-image.png'),
-                      child: Image.network(product['nImage']),
-                    ),
-                    title: Text(
-                      product['Productname'],
-                      style: GoogleFonts.lato(
-                        textStyle: Theme.of(context).textTheme.title.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.grey.shade700,
+                        ]),
+                    child: ListTile(
+                      isThreeLine: true,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProductPage(
+                              product: product,
                             ),
+                          ),
+                        );
+                      },
+                      leading: Container(
+                        // alignment: Alignment.center,
+                        // padding: EdgeInsets.only(top: 12.0),
+                        // color: Colors.amber,
+                        width: 56.0,
+                        height: 56.0,
+                        // child: Image.asset('no-image.png'),
+                        child: Image.network(product['nImage']),
                       ),
-                    ),
-                    subtitle: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        Text(
-                          '₹ ${product['OrignalPrice']} / ${product['unit']}',
-                          style: GoogleFonts.lato(
-                            textStyle:
-                                Theme.of(context).textTheme.subhead.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.grey.shade600,
-                                    ),
-                          ),
+                      title: Text(
+                        product['Productname'],
+                        style: GoogleFonts.lato(
+                          textStyle: Theme.of(context).textTheme.title.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey.shade700,
+                              ),
                         ),
-                        Text(
-                          'Post by : ${product['personname']}',
-                          style: GoogleFonts.lato(
-                            textStyle:
-                                Theme.of(context).textTheme.subtitle.copyWith(
-                                      // fontWeight: FontWeight.w500,
-                                      color: Colors.grey.shade600,
-                                    ),
+                      ),
+                      subtitle: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          Text(
+                            '₹ ${product['OrignalPrice']} / ${product['unit']}',
+                            style: GoogleFonts.lato(
+                              textStyle:
+                                  Theme.of(context).textTheme.subhead.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.grey.shade600,
+                                      ),
+                            ),
                           ),
-                        ),
-                      ],
+                          Text(
+                            'Post by : ${product['personname']}',
+                            style: GoogleFonts.lato(
+                              textStyle:
+                                  Theme.of(context).textTheme.subtitle.copyWith(
+                                        // fontWeight: FontWeight.w500,
+                                        color: Colors.grey.shade600,
+                                      ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
                 separatorBuilder: (context, index) {
-                  return Divider();
+                  return SizedBox(
+                    height: 16.0,
+                  );
                 },
               ),
       ),

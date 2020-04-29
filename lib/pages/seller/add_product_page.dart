@@ -1,11 +1,13 @@
 import 'dart:io';
+import 'package:image/image.dart' as image_package;
 
 import 'package:dropdown_formfield/dropdown_formfield.dart';
-import 'package:farmcart/services/auth_service.dart';
 import 'package:farmcart/services/category_service.dart';
 import 'package:farmcart/services/product_service.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -48,7 +50,7 @@ class _AddProductPageState extends State<AddProductPage> {
   String districtId;
   String tehsilId;
   String villageId;
-
+  String imageUrl;
   List<Map<String, dynamic>> mainCategories = [];
   List<Map<String, dynamic>> subCategories = [];
   List<Map<String, dynamic>> categoryTypes = [];
@@ -74,7 +76,7 @@ class _AddProductPageState extends State<AddProductPage> {
       priceController.text = widget.product['Price'];
       stockUnitId = widget.product['unit'];
       stockQuantityController.text = widget.product['articleno'];
-
+      imageUrl = widget.product['Photo'];
       print('MainCategoryId : $mainCategoryId');
       print('SubCategoryId : $subCategoryId');
       print('CategoryTypeId : $categoryTypeId');
@@ -84,12 +86,12 @@ class _AddProductPageState extends State<AddProductPage> {
   }
 
   Future getCameraImage() async {
-    var image = await ImagePicker.pickImage(
+    File file = await ImagePicker.pickImage(
       source: ImageSource.camera,
     );
 
     setState(() {
-      _image = image;
+      _image = file;
     });
   }
 
@@ -128,6 +130,7 @@ class _AddProductPageState extends State<AddProductPage> {
               // color: Colors.black,
               ),
         ),
+        backgroundColor: Colors.orange.shade100,
         body: Form(
           key: _formKey,
           child: ListView(
@@ -586,7 +589,9 @@ class _AddProductPageState extends State<AddProductPage> {
             width: 80.0,
             alignment: Alignment.center,
             child: _image == null
-                ? Text('No image selected.')
+                ? ((imageUrl == null)
+                    ? Text('No image selected.')
+                    : Image.network(imageUrl))
                 : Image.file(_image),
           ),
         ],
@@ -635,6 +640,7 @@ class _AddProductPageState extends State<AddProductPage> {
                   String price = priceController.text;
                   String unit = stockUnitId;
                   milkQuantity = milkQuantityController.text;
+
                   await productService.addProduct(
                     mainCategoryId,
                     name,
@@ -674,17 +680,45 @@ class _AddProductPageState extends State<AddProductPage> {
                           context: context,
                           builder: (context) {
                             return AlertDialog(
-                                title: Text('SUCCESS'),
-                                content:
-                                    Text('Product is successfully updated.'));
+                              title: Text('SUCCESS'),
+                              content: Text('Product is successfully updated.'),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text(
+                                    'OK',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  color: Theme.of(context).primaryColor,
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
                           })
                       : showDialog(
                           context: context,
                           builder: (context) {
                             return AlertDialog(
-                                title: Text('SUCCESS'),
-                                content:
-                                    Text('Product is successfully added.'));
+                              title: Text('SUCCESS'),
+                              content: Text('Product is successfully added.'),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text(
+                                    'OK',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  color: Theme.of(context).primaryColor,
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
                           });
                 }
                 setState(() {

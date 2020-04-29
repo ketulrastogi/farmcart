@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 import 'package:path/path.dart';
 import 'package:async/async.dart';
 import 'dart:convert';
@@ -61,24 +64,32 @@ class ProductService with ChangeNotifier {
     print('Price: $price');
     print(' Unit: $unit');
     print(' Image: ${(image != null) ? image.uri.toString() : ''}');
+    print('Vetar: ${(mainCategoryId == '11') ? stock : ''}');
+    String userId = userDetails['Id'];
+    String milkqty = (mainCategoryId == '11') ? milkQuantity : '';
+    String milkunit = (mainCategoryId == '11') ? milkUnit : '';
+    String vetar = (mainCategoryId == '11') ? stock : '';
+    String organicType = (mainCategoryId == '11') ? 'organic' : organicTypeId;
+    String articleno = (mainCategoryId == '11') ? 'Test' : stock;
+    print('MilkQty: $milkqty, milkUnit: $milkunit, Vetar: $vetar');
 
     http.Response response = (productId == null)
         ? await http.post(
             'https://api.farmcart.in/api/Seller/AddProduct',
             body: {
-              'userid': userDetails['Id'],
+              'userid': userId,
               'MainCetegory': mainCategoryId,
               'MainCetegoryId': mainCategoryId,
               'SubCetegory': subCategoryId,
               'UnderSubCetegory': categoryTypeId,
               'Prodcutname': name,
-              'Organic': (mainCategoryId == '11') ? 'organic' : organicTypeId,
-              'MilkQuantity': (mainCategoryId == '11') ? milkQuantity : '',
-              'MilkUnit': (mainCategoryId == '11') ? milkUnit : '',
+              'Organic': organicType,
+              'MilkQuantity': milkqty,
+              'MilkUnit': milkunit,
               'Price': price,
               'unit': unit,
-              'vetar': (mainCategoryId == '11') ? stock : 'Test',
-              'Articleno': (mainCategoryId == '11') ? 'Test' : stock,
+              'vetar': vetar,
+              'Articleno': articleno,
               // 'test': fileContentBase64,
             },
           )
@@ -86,19 +97,19 @@ class ProductService with ChangeNotifier {
             'https://api.farmcart.in/api/Seller/UpdateProduct',
             body: {
               'productid': productId,
-              'userid': userDetails['Id'],
+              'userid': userId,
               'MainCetegory': mainCategoryId,
               'MainCetegoryId': mainCategoryId,
               'SubCetegory': subCategoryId,
               'UnderSubCetegory': categoryTypeId,
               'Prodcutname': name,
-              'Organic': organicTypeId,
-              'MilkQuantity': (mainCategoryId == '11') ? milkQuantity : '',
-              'MilkUnit': (mainCategoryId == '11') ? milkUnit : '',
+              'Organic': organicType,
+              'MilkQuantity': milkqty,
+              'MilkUnit': milkunit,
               'Price': price,
               'unit': unit,
-              'vetar': (mainCategoryId == '11') ? stock : 'Test',
-              'Articleno': (mainCategoryId == '11') ? 'Test' : stock,
+              'vetar': vetar,
+              'Articleno': articleno,
               // 'test': fileContentBase64,
             },
           );
@@ -121,33 +132,50 @@ class ProductService with ChangeNotifier {
   Future<void> uploadImage(
     String productId,
     String userId,
-    File image,
+    File file,
   ) async {
-    var stream = new http.ByteStream(DelegatingStream.typed(image.openRead()));
-    // get file length
-    var length = await image.length(); //imageFile is your image file
+    Dio dio = new Dio();
 
-    Uri uri =
-        Uri.parse('https://api.farmcart.in/api/DocumentUpload/AddProductImage');
-
-    var request = new http.MultipartRequest("POST", uri);
-    request.fields['ProductId'] = productId;
-    request.fields['sid'] = userId;
-    var multipartFileSign = new http.MultipartFile('test', stream, length,
-        filename: basename(image.path));
-
-    // add file to multipart
-    request.files.add(multipartFileSign);
-    var response = await request.send();
-
-    print('Image Uploaded');
-    print(
-      response.statusCode,
-    );
-    // listen for response
-    response.stream.transform(utf8.decoder).listen((value) {
-      print(value);
+    String fileName = file.path.split('/').last;
+    FormData formData = FormData.fromMap({
+      'test': await MultipartFile.fromFile(file.path, filename: fileName),
+      'ProductId': productId,
+      'sid': userId,
     });
+    Response response = await dio.post(
+        'https://api.farmcart.in/api/DocumentUpload/AddProductImage',
+        data: formData);
+//  return response.data['id'];
+    print(response.data);
+
+    // var stream = new http.ByteStream(DelegatingStream.typed(image.openRead()));
+    // // get file length
+    // var length = await image.length(); //imageFile is your image file
+    // Uri uri =
+    //     Uri.parse('https://api.farmcart.in/api/DocumentUpload/AddProductImage');
+
+    // var request = new http.MultipartRequest("POST", uri);
+    // request.fields['ProductId'] = productId;
+    // request.fields['sid'] = userId;
+    // var multipartFileSign = new http.MultipartFile(
+    //   'test',
+    //   stream,
+    //   length,
+    //   filename: basename(image.path),
+    // );
+
+    // // add file to multipart
+    // request.files.add(multipartFileSign);
+    // var response = await request.send();
+
+    // print('Image Uploaded');
+    // print(
+    //   response.statusCode,
+    // );
+    // // listen for response
+    // response.stream.transform(utf8.decoder).listen((value) {
+    //   print(value);
+    // });
   }
 
   Future<List<Map<String, dynamic>>> searchProducts(
@@ -269,7 +297,7 @@ class ProductService with ChangeNotifier {
 
     Map<String, dynamic> body = json.decode(response.body);
 
-    // print(body);
+    print('Product Data : $body');
 
     return [...body['Data']][0];
   }

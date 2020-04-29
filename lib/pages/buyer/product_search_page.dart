@@ -78,6 +78,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
               // color: Colors.black,
               ),
         ),
+        backgroundColor: Colors.green.shade100,
         body: Form(
           key: _formKey,
           child: ListView(
@@ -335,38 +336,38 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
             child: Column(
               children: <Widget>[
                 Container(
+                  // width: 150.0,
+                  child: DropDownFormField(
+                    titleText: 'ગાભણ ના પ્રકાર',
+                    hintText: 'ગાભણ ના પ્રકાર',
+                    value: gabhanId,
+                    required: true,
+                    onSaved: (value) {
+                      setState(() {
+                        gabhanId = value;
+                      });
+                    },
+                    onChanged: (value) {
+                      setState(() {
+                        gabhanId = value;
+                      });
+                    },
+                    dataSource: [
+                      {'Id': 'gabhan', 'Name': 'ગાભણ'},
+                      {'Id': 'nongabhan', 'Name': 'બિન-ગાભણ'},
+                    ],
+                    textField: 'Name',
+                    valueField: 'Id',
+                  ),
+                ),
+                SizedBox(
+                  height: 8.0,
+                ),
+                Container(
                   child: Row(
                     children: <Widget>[
-                      Container(
-                        width: 150.0,
-                        child: DropDownFormField(
-                          titleText: 'ગાભણ ના પ્રકાર',
-                          hintText: 'ગાભણ ના પ્રકાર',
-                          value: gabhanId,
-                          required: true,
-                          onSaved: (value) {
-                            setState(() {
-                              gabhanId = value;
-                            });
-                          },
-                          onChanged: (value) {
-                            setState(() {
-                              gabhanId = value;
-                            });
-                          },
-                          dataSource: [
-                            {'Id': 'gabhan', 'Name': 'ગાભણ'},
-                            {'Id': 'nongabhan', 'Name': 'બિન-ગાભણ'},
-                          ],
-                          textField: 'Name',
-                          valueField: 'Id',
-                        ),
-                      ),
-                      SizedBox(
-                        width: 8.0,
-                      ),
                       Flexible(
-                        flex: 1,
+                        flex: 2,
                         child: TextFormField(
                           controller: milkQuantityController,
                           // onSaved: (value) {
@@ -392,8 +393,9 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                       SizedBox(
                         width: 8.0,
                       ),
-                      Container(
-                        width: 120.0,
+                      Flexible(
+                        flex: 1,
+                        // width: 120.0,
                         child: DropDownFormField(
                           titleText: 'માપ',
                           hintText: 'માપ',
@@ -420,6 +422,9 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                     ],
                   ),
                 ),
+                SizedBox(
+                  height: 8.0,
+                ),
               ],
             ),
           )
@@ -433,7 +438,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
       child: Row(
         children: <Widget>[
           Flexible(
-            flex: 1,
+            flex: 2,
             child: TextFormField(
               controller: stockQuantityController,
               // onSaved: (value) {
@@ -459,8 +464,9 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
           SizedBox(
             width: 8.0,
           ),
-          Container(
-            width: 150.0,
+          Flexible(
+            flex: 1,
+            // width: 150.0,
             child: FutureBuilder<List<Map<String, dynamic>>>(
               initialData: [],
               future: categoryService.getStockTypes(mainCategoryId),

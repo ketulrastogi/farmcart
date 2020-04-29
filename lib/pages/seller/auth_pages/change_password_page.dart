@@ -123,6 +123,20 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                 title: Text('SUCCESS'),
                                 content:
                                     Text('Password is changed successfully.'),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    child: Text(
+                                      'OK',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    color: Theme.of(context).primaryColor,
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
                               );
                             });
                         // Navigator.pop(context);
@@ -134,6 +148,20 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                 title: Text('SUCCESS'),
                                 content: Text(
                                     'An error occured while changing password.'),
+                                actions: <Widget>[
+                                  FlatButton(
+                                    child: Text(
+                                      'OK',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    color: Theme.of(context).primaryColor,
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
                               );
                             });
                       }

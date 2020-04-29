@@ -55,7 +55,7 @@ class _AuthPageState extends State<AuthPage> {
                     color: Theme.of(context).primaryColor,
                   ),
                 ),
-                backgroundColor: Colors.white,
+                backgroundColor: Colors.yellow.shade100,
                 body: Form(
                   key: _formKey,
                   child: ListView(

@@ -67,7 +67,7 @@ class _SignupPageState extends State<SignupPage> {
             color: Theme.of(context).primaryColor,
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.yellow.shade100,
         body: Form(
           key: _formKey,
           child: ListView(
@@ -314,7 +314,7 @@ class _SignupPageState extends State<SignupPage> {
                         color: Colors.black45,
                       ),
                     ),
-                    color: Colors.grey.shade100,
+                    color: Colors.black12,
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
