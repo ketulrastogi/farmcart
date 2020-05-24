@@ -40,6 +40,7 @@ class ProductService with ChangeNotifier {
     String price,
     String unit,
     String stock,
+    String gabhanType,
     File image,
     String productId,
   ) async {
@@ -65,12 +66,14 @@ class ProductService with ChangeNotifier {
     print(' Unit: $unit');
     print(' Image: ${(image != null) ? image.uri.toString() : '%00'}');
     print('Vetar: ${(mainCategoryId == '11') ? stock : '%00'}');
+    print('GabhanType : $gabhanType');
     String userId = userDetails['Id'];
-    String milkqty = (mainCategoryId == '11') ? milkQuantity : '%00';
-    String milkunit = (mainCategoryId == '11') ? milkUnit : '%00';
-    String vetar = (mainCategoryId == '11') ? stock : '%00';
+    String milkqty = (mainCategoryId == '11') ? milkQuantity : '0';
+    String milkunit = (mainCategoryId == '11') ? milkUnit : 'Liter';
+    String gabhantype = (gabhanType != null) ? gabhanType : 'NA';
+    String vetar = (mainCategoryId == '11') ? stock : '0';
     String organicType = (mainCategoryId == '11') ? 'organic' : organicTypeId;
-    String articleno = (mainCategoryId == '11') ? 'Test' : stock;
+    String articleno = (mainCategoryId == '11') ? '1' : stock;
     print('MilkQty: $milkqty, milkUnit: $milkunit, Vetar: $vetar');
 
     http.Response response = (productId == null)
@@ -90,6 +93,7 @@ class ProductService with ChangeNotifier {
               'unit': unit,
               'vetar': vetar,
               'Articleno': articleno,
+              'GabhanType': gabhantype,
               // 'test': fileContentBase64,
             },
           )

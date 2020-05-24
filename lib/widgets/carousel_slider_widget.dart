@@ -128,7 +128,7 @@ class _CategorySliderWidgetState extends State<CategorySliderWidget> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Image.network(
                                   product.imageUrl,
-                                  fit: BoxFit.contain,
+                                  fit: BoxFit.fill,
                                 ),
                               ),
                             ),

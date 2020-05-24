@@ -76,6 +76,7 @@ class _AddProductPageState extends State<AddProductPage> {
       priceController.text = widget.product['Price'];
       stockUnitId = widget.product['unit'];
       stockQuantityController.text = widget.product['articleno'];
+      gabhanId = widget.product['GabhanType'];
       imageUrl = widget.product['Photo'];
       print('MainCategoryId : $mainCategoryId');
       print('SubCategoryId : $subCategoryId');
@@ -87,11 +88,10 @@ class _AddProductPageState extends State<AddProductPage> {
 
   Future getCameraImage() async {
     File file = await ImagePicker.pickImage(
-      source: ImageSource.camera,
-      imageQuality: 80,
-      maxHeight: 800,
-      maxWidth: 800
-    );
+        source: ImageSource.camera,
+        imageQuality: 80,
+        maxHeight: 800,
+        maxWidth: 800);
 
     setState(() {
       _image = file;
@@ -133,7 +133,7 @@ class _AddProductPageState extends State<AddProductPage> {
               // color: Colors.black,
               ),
         ),
-        backgroundColor: Colors.orange.shade100,
+        backgroundColor: Colors.green.shade100,
         body: Form(
           key: _formKey,
           child: ListView(
@@ -655,6 +655,7 @@ class _AddProductPageState extends State<AddProductPage> {
                     price,
                     unit,
                     stock,
+                    gabhanId,
                     _image,
                     widget.productId,
                   );

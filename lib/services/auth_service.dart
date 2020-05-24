@@ -1,9 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService with ChangeNotifier {
+  String _paymentStatus = 'Failure';
+
+  String get paymentStatus => _paymentStatus;
+
   Future<bool> checkMobile(String phoneNumber) async {
     http.Response response =
         await http.post('https://api.farmcart.in/api/Signup/Signup', body: {
@@ -67,7 +73,7 @@ class AuthService with ChangeNotifier {
     return body['Success'];
   }
 
-  Future<bool> signIn(String username, String password) async {
+  Future<Map<String, dynamic>> signIn(String username, String password) async {
     SharedPreferences _sharedPreferences =
         await SharedPreferences.getInstance();
 
@@ -80,8 +86,53 @@ class AuthService with ChangeNotifier {
     );
 
     Map<String, dynamic> body = json.decode(response.body);
+    if (body['payment_Status'] != null && body['payment_Status'] == 'Success') {
+      _sharedPreferences.setString('userDetails', response.body);
+    }
+
+    print(body);
+    return body;
+  }
+
+  Future<bool> checkPaymentStatus(String username, String password) async {
+    SharedPreferences _sharedPreferences =
+        await SharedPreferences.getInstance();
+    http.Response response;
+    Map<String, dynamic> body;
+    response = await http.post(
+      'https://api.farmcart.in/api/Login/Signin',
+      body: {
+        'username': username,
+        'password': password,
+      },
+    );
+    body = json.decode(response.body);
+
+    Timer.periodic(Duration(seconds: 5), (timer) async {
+      response = await http.post(
+        'https://api.farmcart.in/api/Login/Signin',
+        body: {
+          'username': username,
+          'password': password,
+        },
+      );
+
+      body = json.decode(response.body);
+      if ((body['payment_date'] != null)
+          // &&
+          //     DateTime.now()
+          //             .difference(DateTime.parse(body['payment_date']))
+          //             .inMinutes <
+          //         10
+          ) {
+        timer.cancel();
+        _paymentStatus = body['payment_Status'];
+        notifyListeners();
+      }
+    });
 
     _sharedPreferences.setString('userDetails', response.body);
+    print(body);
 
     return body['Success'];
   }
@@ -102,7 +153,7 @@ class AuthService with ChangeNotifier {
   Future<void> signOut() async {
     SharedPreferences _sharedPreferences =
         await SharedPreferences.getInstance();
-    _sharedPreferences.setString('userDetails', '');
+    _sharedPreferences.setString('userDetails', null);
   }
 
   Future<void> changePassword(String password) async {
@@ -127,6 +178,7 @@ class AuthService with ChangeNotifier {
       Map<String, dynamic> body = json.decode(response.body);
 
       print(body);
+      return body['Success'];
     }
   }
 }

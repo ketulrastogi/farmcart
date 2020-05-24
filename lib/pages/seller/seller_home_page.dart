@@ -4,6 +4,7 @@ import 'package:farmcart/pages/home_page/home_page.dart';
 import 'package:farmcart/pages/seller/add_product_page.dart';
 import 'package:farmcart/pages/seller/auth_pages/auth_page.dart';
 import 'package:farmcart/pages/seller/auth_pages/change_password_page.dart';
+import 'package:farmcart/pages/seller/my_team_page.dart';
 import 'package:farmcart/pages/seller/order_inquiry_List_page.dart';
 import 'package:farmcart/pages/web_viewer_page.dart';
 import 'package:farmcart/services/auth_service.dart';
@@ -119,6 +120,23 @@ class _SellerHomePageState extends State<SellerHomePage> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => HomePage(),
+                      ),
+                    );
+                  },
+                ),
+                Divider(
+                  indent: 16.0,
+                ),
+                ListTile(
+                  title: Text(
+                    'My Team',
+                    style: GoogleFonts.lato(fontWeight: FontWeight.bold),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyTeamPage(),
                       ),
                     );
                   },
@@ -246,7 +264,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
             ),
           ),
         ),
-        backgroundColor: Colors.orange.shade100,
+        backgroundColor: Colors.green.shade100,
         body: FutureBuilder<List<Map<String, dynamic>>>(
           future: _productService.getProducts(),
           builder:
@@ -369,7 +387,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                           borderRadius: BorderRadius.circular(32.0),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.orange.shade200,
+                              color: Colors.green.shade200,
                               blurRadius: 4.0,
                               spreadRadius: 4.0,
                             ),
@@ -381,7 +399,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                             textStyle:
                                 Theme.of(context).textTheme.title.copyWith(
                                       fontWeight: FontWeight.w700,
-                                      color: Colors.orange,
+                                      color: Colors.green,
                                     ),
                           ),
                         ),
@@ -437,7 +455,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
           },
         ),
         floatingActionButton: RaisedButton(
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).primaryColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.0),
           ),

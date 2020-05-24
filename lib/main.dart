@@ -3,6 +3,7 @@ import 'package:farmcart/services/auth_service.dart';
 import 'package:farmcart/services/carousel_slider_service.dart';
 import 'package:farmcart/services/category_service.dart';
 import 'package:farmcart/services/location_service.dart';
+import 'package:farmcart/services/my_team_service.dart';
 import 'package:farmcart/services/order_service.dart';
 import 'package:farmcart/services/product_service.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<OrderService>(
           create: (context) => OrderService(),
+        ),
+        ChangeNotifierProvider<MyTeamService>(
+          create: (context) => MyTeamService(),
         ),
       ],
       child: MaterialApp(
