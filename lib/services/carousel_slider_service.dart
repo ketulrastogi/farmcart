@@ -26,7 +26,7 @@ class CarouselSliderService with ChangeNotifier {
         await http.get('https://api.farmcart.in/api/Home/Sliderdata');
 
     Map<String, dynamic> body = json.decode(response.body);
-
+    print('CarouselSliderService[29]- ResponseBody: $body');
     return [...body['Data']].map<CarouselSliderImage>((item) {
       return CarouselSliderImage.fromJson(item);
     }).toList();

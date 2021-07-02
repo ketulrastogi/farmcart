@@ -9,6 +9,7 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="Farm Cart"
+        android:networkSecurityConfig="@xml/network_security_resource"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"

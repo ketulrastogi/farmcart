@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:farmcart/pages/home_page/home_page.dart';
 import 'package:farmcart/services/auth_service.dart';
 import 'package:farmcart/services/carousel_slider_service.dart';
@@ -8,8 +10,22 @@ import 'package:farmcart/services/order_service.dart';
 import 'package:farmcart/services/product_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  HttpOverrides.global = new MyHttpOverrides();
+
+  runApp(MyApp());
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
+}
 
 class MyApp extends StatelessWidget {
   @override

@@ -26,7 +26,7 @@ class _AutoScrollTextState extends State<AutoScrollText>
     double offset = 0.0;
     super.initState();
     animateCtrl =
-        new AnimationController(vsync: this, duration: Duration(seconds: 3))
+        new AnimationController(duration: Duration(seconds: 3), vsync: this)
           ..addListener(() {
             if (animateCtrl.isCompleted) animateCtrl.repeat();
             offset += 1.0;

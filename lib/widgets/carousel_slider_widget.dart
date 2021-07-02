@@ -20,6 +20,23 @@ class _CarouselSliderWidgetState extends State<CarouselSliderWidget> {
     return FutureBuilder<List<CarouselSliderImage>>(
         future: carouselSliderService.getSliderImages(),
         builder: (context, snapshot) {
+          print('CaraouseSliderWidget[22]- Snapshot: ${snapshot.error}');
+          if (snapshot.hasError) {
+            return Container(
+              height: 200.0,
+              child: Center(
+                child: Text('${snapshot.error}'),
+              ),
+            );
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Container(
+              height: 200.0,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
           if (snapshot.hasData) {
             return CarouselSlider(
               height: 200.0,
@@ -69,7 +86,7 @@ class _CarouselSliderWidgetState extends State<CarouselSliderWidget> {
             return Container(
               height: 200.0,
               child: Center(
-                child: CircularProgressIndicator(),
+                child: Text('No slider images are found.'),
               ),
             );
           }
